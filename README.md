@@ -1,73 +1,104 @@
-# Welcome to your Lovable project
+# 🐺 Wolf Gym - Fitness Tracker Application
 
-## Project info
+Wolf Gym is a gamified fitness tracking application that helps users log workouts, track progress, and stay motivated through a wolf-themed ranking system. Built during the PSU Hackathon, this app combines workout tracking with gamification elements to make fitness fun and engaging.
 
-**URL**: https://lovable.dev/projects/ed2e5489-03a4-497f-92c1-36d59b0ce9be
+## 🚀 Features
 
-## How can I edit this code?
+- **Workout Tracking**: Log exercises, sets, reps, and weight for each workout session
+- **Progress Visualization**: View your progress over time with statistics and charts
+- **Wolf Rank System**: Progress through different wolf ranks as you earn XP from workouts
+- **Streak Counter**: Keep track of consecutive workout days for additional motivation
+- **Calendar View**: See your workout history in a calendar format
+- **Pack System**: Connect with friends to form a pack and motivate each other
+- **User Profiles**: Customize your profile and view your achievements
 
-There are several ways of editing your application.
+## 🏆 Wolf Rank Progression
 
-**Use Lovable**
+As you complete workouts and earn XP, you'll progress through these wolf ranks:
+- Baby Pup
+- Puplet
+- Runt
+- Straight Up Dawg
+- Respectable Wolf
+- Beta Wolf
+- Alpha Wolf
+- Sigma Wolf
+- Super Mega Deluxe Ultra Sigma Nonchalant Wolf
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/ed2e5489-03a4-497f-92c1-36d59b0ce9be) and start prompting.
+Each rank comes with its own unique badge icon to showcase your progress!
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🛠️ Tech Stack
 
-**Use your preferred IDE**
+- **Frontend**: React, TypeScript, Vite
+- **UI Components**: shadcn/ui, Tailwind CSS
+- **State Management**: React Query
+- **Backend & Authentication**: Supabase
+- **Routing**: React Router
+- **Form Handling**: React Hook Form, Zod
+- **Date Manipulation**: date-fns
+- **Icons**: Lucide React
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## 📋 Prerequisites
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- Node.js (v18 or higher)
+- npm or yarn
+- Supabase account (for database and authentication)
 
-Follow these steps:
+## 🚀 Getting Started
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-username/PSU-Hackathon-Team-12.git
+   cd PSU-Hackathon-Team-12
+   ```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+2. **Install dependencies**
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
 
-# Step 3: Install the necessary dependencies.
-npm i
+3. **Configure environment variables**
+   
+   Create a `.env` file in the root directory with your Supabase credentials:
+   ```
+   VITE_SUPABASE_URL=your_supabase_url
+   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+4. **Run the development server**
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
 
-**Edit a file directly in GitHub**
+5. **Open your browser**
+   
+   Navigate to `http://localhost:5173` to see the application
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 📱 Application Structure
 
-**Use GitHub Codespaces**
+- **Dashboard**: View your stats, recent workouts, and current rank
+- **Workouts**: Log and view detailed workout history
+- **Calendar**: Visualize your workout frequency
+- **Pack**: Connect with friends and see their progress
+- **Profile**: Manage your profile and view achievements
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 🧠 Database Schema
 
-## What technologies are used for this project?
+The application uses the following main tables in Supabase:
+- Users: User profiles and authentication
+- Workouts: Workout sessions data
+- Exercises: Individual exercises within workouts
+- Achievements: User achievements and progress
+- Rank Progressions: XP thresholds for different ranks
 
-This project is built with:
+## 🤝 Team Members
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+This project was created by Team 12 during the PSU Hackathon.
 
-## How can I deploy this project?
+## 📄 License
 
-Simply open [Lovable](https://lovable.dev/projects/ed2e5489-03a4-497f-92c1-36d59b0ce9be) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes it is!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+This project is licensed under the MIT License. See the LICENSE file for details.
