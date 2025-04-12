@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { format, isToday, parseISO, isSameDay } from "date-fns";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
@@ -7,73 +6,6 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dumbbell } from "lucide-react";
 import { Workout } from "@/types/workout";
-
-// Mock workout data
-const mockWorkouts: Workout[] = [
-  { 
-    id: "1", 
-    name: "Chest Day",
-    date: "2023-04-10", 
-    displayDate: "Today",
-    exercises: [
-      { id: "e1", name: "Bench Press", sets: 3, reps: 10, weight: "80kg" },
-      { id: "e2", name: "Overhead Press", sets: 3, reps: 8, weight: "50kg" },
-      { id: "e3", name: "Tricep Extensions", sets: 3, reps: 12, weight: "35kg" },
-    ],
-    notes: "Chest day. Felt strong today!",
-    xpGained: 100
-  },
-  { 
-    id: "2", 
-    name: "Back Day",
-    date: "2023-04-09", 
-    displayDate: "Yesterday",
-    exercises: [
-      { id: "e4", name: "Deadlift", sets: 4, reps: 8, weight: "120kg" },
-      { id: "e5", name: "Pull-ups", sets: 4, reps: 8, weight: "BW" },
-      { id: "e6", name: "Barbell Row", sets: 3, reps: 10, weight: "70kg" },
-    ],
-    notes: "Back day. Need to work on grip strength.",
-    xpGained: 75
-  },
-  { 
-    id: "3", 
-    name: "Leg Day",
-    date: "2023-04-07", 
-    displayDate: "3 days ago",
-    exercises: [
-      { id: "e7", name: "Squat", sets: 4, reps: 12, weight: "100kg" },
-      { id: "e8", name: "Lunges", sets: 3, reps: 10, weight: "40kg" },
-    ],
-    notes: "Leg day. Really pushed it today.",
-    xpGained: 75
-  },
-  { 
-    id: "4", 
-    name: "Upper Body",
-    date: "2023-04-06", 
-    displayDate: "4 days ago",
-    exercises: [
-      { id: "e9", name: "Bench Press", sets: 3, reps: 10, weight: "75kg" },
-      { id: "e10", name: "Push-ups", sets: 3, reps: 15, weight: "BW" },
-      { id: "e11", name: "Bicep Curls", sets: 4, reps: 10, weight: "25kg" },
-    ],
-    notes: "",
-    xpGained: 75
-  },
-  { 
-    id: "5", 
-    name: "Quick Back",
-    date: "2023-04-05", 
-    displayDate: "5 days ago",
-    exercises: [
-      { id: "e12", name: "Deadlift", sets: 3, reps: 8, weight: "110kg" },
-      { id: "e13", name: "Pull-ups", sets: 3, reps: 8, weight: "BW" },
-    ],
-    notes: "Quick back workout",
-    xpGained: 25
-  },
-];
 
 // Helper function to group workouts by month
 const groupWorkoutsByMonth = (workouts: Workout[]) => {
@@ -94,17 +26,17 @@ const Calendar = () => {
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
   const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [groupedWorkouts, setGroupedWorkouts] = useState(() => groupWorkoutsByMonth(mockWorkouts));
+  const [groupedWorkouts, setGroupedWorkouts] = useState(() => groupWorkoutsByMonth([]));
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
 
   // Check if a date has a workout
   const hasWorkout = (date: Date) => {
-    return mockWorkouts.some(workout => isSameDay(parseISO(workout.date), date));
+    return false; // Replace with actual logic to check for workouts
   };
 
   // Get workout details for a date
   const getWorkoutForDate = (date: Date) => {
-    return mockWorkouts.find(workout => isSameDay(parseISO(workout.date), date));
+    return null; // Replace with actual logic to fetch workout details
   };
 
   const handleDateClick = (date: Date) => {
@@ -260,19 +192,19 @@ const Calendar = () => {
           <div className="bg-wolf-charcoal p-4 rounded-lg">
             <div className="text-wolf-silver text-sm">Workout Days</div>
             <div className="text-2xl font-bold text-white mt-1">
-              {mockWorkouts.length}
+              0
             </div>
           </div>
           <div className="bg-wolf-charcoal p-4 rounded-lg">
             <div className="text-wolf-silver text-sm">Total XP Earned</div>
             <div className="text-2xl font-bold text-white mt-1">
-              {mockWorkouts.reduce((total, workout) => total + workout.xpGained, 0)} XP
+              0 XP
             </div>
           </div>
           <div className="bg-wolf-charcoal p-4 rounded-lg">
             <div className="text-wolf-silver text-sm">Consistency Rate</div>
             <div className="text-2xl font-bold text-white mt-1">
-              {Math.floor((mockWorkouts.length / 30) * 100)}%
+              0%
             </div>
           </div>
         </div>

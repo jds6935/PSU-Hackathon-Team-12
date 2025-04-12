@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { 
   Dumbbell, 
@@ -22,91 +21,40 @@ import WorkoutForm from "@/components/WorkoutForm";
 import { CustomProgress } from "@/components/ui/custom-progress";
 import { Workout } from "@/types/workout";
 
-// Mock data - in a real app would come from Supabase
-const mockData = {
-  user: {
-    name: "Alpha Hunter",
-    rank: "Beta Wolf",
-    xp: 380,
-    nextRankXp: 450,
-    streak: 4,
-    totalWorkouts: 27,
-    joined: "March 2023",
-    avatar: "/public/lovable-uploads/09661d06-c457-416e-9cc4-69eca6a35989.png"
-  },
-  stats: {
-    workoutsThisWeek: 3,
-    workoutsLastWeek: 2,
-    weightLifted: "12,540 kg",
-    weightChange: {
-      value: 15,
-      positive: true
-    }
-  },
-  recentWorkouts: [
-    { 
-      id: "1", 
-      name: "Chest Day",
-      date: "2023-04-10",
-      displayDate: "Today", 
-      exercises: [
-        { id: "e1", name: "Bench Press", sets: 3, reps: 10, weight: "80kg" },
-        { id: "e2", name: "Overhead Press", sets: 3, reps: 8, weight: "50kg" },
-        { id: "e3", name: "Tricep Extensions", sets: 3, reps: 12, weight: "35kg" },
-      ],
-      notes: "Felt strong today!",
-      xpGained: 100
-    },
-    { 
-      id: "2", 
-      name: "Back Day",
-      date: "2023-04-09", 
-      displayDate: "Yesterday",
-      exercises: [
-        { id: "e4", name: "Deadlift", sets: 4, reps: 8, weight: "120kg" },
-        { id: "e5", name: "Pull-ups", sets: 4, reps: 8, weight: "BW" },
-      ],
-      notes: "Need to work on grip strength.",
-      xpGained: 75
-    },
-    { 
-      id: "3", 
-      name: "Leg Day",
-      date: "2023-04-07", 
-      displayDate: "3 days ago",
-      exercises: [
-        { id: "e7", name: "Squat", sets: 4, reps: 12, weight: "100kg" },
-        { id: "e8", name: "Lunges", sets: 3, reps: 10, weight: "40kg" },
-      ],
-      notes: "Really pushed it today.",
-      xpGained: 75
-    },
-    { 
-      id: "4", 
-      name: "Upper Body",
-      date: "2023-04-06", 
-      displayDate: "4 days ago",
-      exercises: [
-        { id: "e9", name: "Push-ups", sets: 3, reps: 15, weight: "BW" },
-        { id: "e10", name: "Bicep Curls", sets: 4, reps: 10, weight: "25kg" },
-      ],
-      notes: "",
-      xpGained: 75
-    }
-  ] as Workout[],
-  todayXP: 100,
-  xpToEarn: 150
-};
-
 const Dashboard = () => {
   const [showWorkoutDialog, setShowWorkoutDialog] = useState(false);
   const navigate = useNavigate();
+
+  const user = {
+    name: "",
+    rank: "",
+    xp: 0,
+    nextRankXp: 0,
+    streak: 0,
+    totalWorkouts: 0,
+    joined: "",
+    avatar: ""
+  };
+
+  const stats = {
+    workoutsThisWeek: 0,
+    workoutsLastWeek: 0,
+    weightLifted: "",
+    weightChange: {
+      value: 0,
+      positive: true
+    }
+  };
+
+  const recentWorkouts: Workout[] = [];
+  const todayXP = 0;
+  const xpToEarn = 0;
 
   return (
     <>
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-wolf-silver">Dashboard</h1>
-        <p className="text-wolf-silver/60">Welcome back, {mockData.user.name}</p>
+        <p className="text-wolf-silver/60">Welcome back, {user.name}</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
@@ -114,40 +62,40 @@ const Dashboard = () => {
         <Card className="col-span-1 md:col-span-4 glass-card border-none shadow-md">
           <CardHeader className="pb-2">
             <CardTitle className="text-xl font-bold text-white">Your Profile</CardTitle>
-            <CardDescription className="text-wolf-silver">Member since {mockData.user.joined}</CardDescription>
+            <CardDescription className="text-wolf-silver">Member since {user.joined}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col items-center">
               <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-wolf-purple mb-4">
                 <img 
-                  src={mockData.user.avatar} 
-                  alt={mockData.user.name} 
+                  src={user.avatar} 
+                  alt={user.name} 
                   className="w-full h-full object-cover"
                 />
               </div>
               
-              <h2 className="text-xl font-bold text-white mb-3">{mockData.user.name}</h2>
+              <h2 className="text-xl font-bold text-white mb-3">{user.name}</h2>
               
               <RankBadge 
-                rank={mockData.user.rank}
-                xp={mockData.user.xp}
-                nextRankXp={mockData.user.nextRankXp}
+                rank={user.rank}
+                xp={user.xp}
+                nextRankXp={user.nextRankXp}
                 className="mb-6"
               />
               
               <div className="w-full bg-wolf-charcoal rounded-lg p-4 mb-4">
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-wolf-silver text-sm">Today's XP</span>
-                  <span className="text-wolf-purple font-medium">{mockData.todayXP}/{mockData.xpToEarn}</span>
+                  <span className="text-wolf-purple font-medium">{todayXP}/{xpToEarn}</span>
                 </div>
                 <CustomProgress 
-                  value={(mockData.todayXP / mockData.xpToEarn) * 100} 
+                  value={(todayXP / xpToEarn) * 100} 
                   className="h-2 bg-wolf-dark" 
                   indicatorClassName="bg-wolf-purple" 
                 />
               </div>
               
-              <StreakCounter streak={mockData.user.streak} />
+              <StreakCounter streak={user.streak} />
             </div>
           </CardContent>
         </Card>
@@ -156,18 +104,18 @@ const Dashboard = () => {
         <div className="col-span-1 md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
           <StatCard
             title="Workouts This Week"
-            value={mockData.stats.workoutsThisWeek}
+            value={stats.workoutsThisWeek}
             icon={<Dumbbell className="h-5 w-5" />}
             change={
-              mockData.stats.workoutsLastWeek
+              stats.workoutsLastWeek
                 ? {
                     value: Math.round(
-                      ((mockData.stats.workoutsThisWeek - mockData.stats.workoutsLastWeek) /
-                        mockData.stats.workoutsLastWeek) *
+                      ((stats.workoutsThisWeek - stats.workoutsLastWeek) /
+                        stats.workoutsLastWeek) *
                         100
                     ),
                     positive:
-                      mockData.stats.workoutsThisWeek >= mockData.stats.workoutsLastWeek,
+                      stats.workoutsThisWeek >= stats.workoutsLastWeek,
                   }
                 : undefined
             }
@@ -175,20 +123,20 @@ const Dashboard = () => {
           
           <StatCard
             title="Current Streak"
-            value={`${mockData.user.streak} days`}
+            value={`${user.streak} days`}
             icon={<Flame className="h-5 w-5" />}
           />
           
           <StatCard
             title="Total Weight Lifted"
-            value={mockData.stats.weightLifted}
+            value={stats.weightLifted}
             icon={<TrendingUp className="h-5 w-5" />}
-            change={mockData.stats.weightChange}
+            change={stats.weightChange}
           />
           
           <StatCard
             title="Total Workouts"
-            value={mockData.user.totalWorkouts}
+            value={user.totalWorkouts}
             icon={<Trophy className="h-5 w-5" />}
           />
 
@@ -221,7 +169,7 @@ const Dashboard = () => {
           <CardContent>
             <ScrollArea className="h-[250px] w-full pr-4">
               <div className="space-y-4">
-                {mockData.recentWorkouts.map((workout) => (
+                {recentWorkouts.map((workout) => (
                   <div
                     key={workout.id}
                     className="flex items-center p-3 hover:bg-wolf-charcoal/50 rounded-lg transition-colors"

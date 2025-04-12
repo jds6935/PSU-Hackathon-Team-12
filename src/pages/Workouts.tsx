@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { 
   Dumbbell, 
@@ -29,87 +28,6 @@ import { toast } from "sonner";
 import WorkoutForm from "@/components/WorkoutForm";
 import { Exercise, Workout } from "@/types/workout";
 
-// Mock data for exercises
-const exercises = [
-  { id: "1", name: "Bench Press", muscleGroup: "Chest" },
-  { id: "2", name: "Deadlift", muscleGroup: "Back" },
-  { id: "3", name: "Squat", muscleGroup: "Legs" },
-  { id: "4", name: "Pull-ups", muscleGroup: "Back" },
-  { id: "5", name: "Push-ups", muscleGroup: "Chest" },
-  { id: "6", name: "Overhead Press", muscleGroup: "Shoulders" },
-  { id: "7", name: "Barbell Row", muscleGroup: "Back" },
-  { id: "8", name: "Lunges", muscleGroup: "Legs" },
-  { id: "9", name: "Bicep Curls", muscleGroup: "Arms" },
-  { id: "10", name: "Tricep Extensions", muscleGroup: "Arms" },
-];
-
-// Mock data for workouts
-const workoutHistory: Workout[] = [
-  { 
-    id: "1", 
-    name: "Chest Day",
-    date: "2023-04-10", 
-    displayDate: "Today",
-    exercises: [
-      { id: "e1", name: "Bench Press", sets: 3, reps: 10, weight: "80kg" },
-      { id: "e2", name: "Overhead Press", sets: 3, reps: 8, weight: "50kg" },
-      { id: "e3", name: "Tricep Extensions", sets: 3, reps: 12, weight: "35kg" },
-    ],
-    notes: "Chest day. Felt strong today!",
-    xpGained: 100
-  },
-  { 
-    id: "2", 
-    name: "Back Day",
-    date: "2023-04-09", 
-    displayDate: "Yesterday",
-    exercises: [
-      { id: "e4", name: "Deadlift", sets: 4, reps: 8, weight: "120kg" },
-      { id: "e5", name: "Pull-ups", sets: 4, reps: 8, weight: "BW" },
-      { id: "e6", name: "Barbell Row", sets: 3, reps: 10, weight: "70kg" },
-    ],
-    notes: "Back day. Need to work on grip strength.",
-    xpGained: 75
-  },
-  { 
-    id: "3", 
-    name: "Leg Day",
-    date: "2023-04-07", 
-    displayDate: "3 days ago",
-    exercises: [
-      { id: "e7", name: "Squat", sets: 4, reps: 12, weight: "100kg" },
-      { id: "e8", name: "Lunges", sets: 3, reps: 10, weight: "40kg" },
-    ],
-    notes: "Leg day. Really pushed it today.",
-    xpGained: 75
-  },
-  { 
-    id: "4", 
-    name: "Upper Body",
-    date: "2023-04-06", 
-    displayDate: "4 days ago",
-    exercises: [
-      { id: "e9", name: "Bench Press", sets: 3, reps: 10, weight: "75kg" },
-      { id: "e10", name: "Push-ups", sets: 3, reps: 15, weight: "BW" },
-      { id: "e11", name: "Bicep Curls", sets: 4, reps: 10, weight: "25kg" },
-    ],
-    notes: "",
-    xpGained: 75
-  },
-  { 
-    id: "5", 
-    name: "Quick Back",
-    date: "2023-04-05", 
-    displayDate: "5 days ago",
-    exercises: [
-      { id: "e12", name: "Deadlift", sets: 3, reps: 8, weight: "110kg" },
-      { id: "e13", name: "Pull-ups", sets: 3, reps: 8, weight: "BW" },
-    ],
-    notes: "Quick back workout",
-    xpGained: 25
-  },
-];
-
 // Helper function to group workouts by month
 const groupWorkoutsByMonth = (workouts: Workout[]) => {
   return workouts.reduce((groups: Record<string, Workout[]>, workout) => {
@@ -129,12 +47,15 @@ const Workouts = () => {
   const [tab, setTab] = useState("history");
   const [searchQuery, setSearchQuery] = useState("");
   const [showAddDialog, setShowAddDialog] = useState(false);
+
+  // Replace mock data with empty or external data source
+  const exercises: Exercise[] = [];
+  const workoutHistory: Workout[] = [];
   const [groupedWorkouts, setGroupedWorkouts] = useState(() => groupWorkoutsByMonth(workoutHistory));
   
   // Filter exercises based on search
   const filteredExercises = exercises.filter((exercise) => 
-    exercise.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    exercise.muscleGroup.toLowerCase().includes(searchQuery.toLowerCase())
+    exercise.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleDeleteWorkout = (workoutId: string) => {

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Users, Search, UserPlus, UserCheck, Mail, ChevronRight, Activity, CalendarCheck } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -16,86 +15,33 @@ import RankBadge from "@/components/RankBadge";
 import { CustomProgress } from "@/components/ui/custom-progress";
 import { FriendProfile } from "@/types/workout";
 
-// Mock data for friends
-const mockFriends: FriendProfile[] = [
-  {
-    id: "1",
-    name: "Alex Wolf",
-    rank: "Alpha Wolf",
-    xp: 690,
-    nextRankXp: 750,
-    streak: 8,
-    totalWorkouts: 45,
-    joined: "January 2023",
-    avatar: "/public/lovable-uploads/09661d06-c457-416e-9cc4-69eca6a35989.png",
-    lastActive: "2 hours ago",
-    status: "online"
-  },
-  {
-    id: "2",
-    name: "Sarah Hunter",
-    rank: "Beta Wolf",
-    xp: 410,
-    nextRankXp: 450,
-    streak: 5,
-    totalWorkouts: 32,
-    joined: "February 2023",
-    avatar: "",
-    lastActive: "10 minutes ago",
-    status: "online"
-  },
-  {
-    id: "3",
-    name: "Mike Thunder",
-    rank: "Howler",
-    xp: 320,
-    nextRankXp: 450,
-    streak: 3,
-    totalWorkouts: 27,
-    joined: "March 2023",
-    avatar: "",
-    lastActive: "1 day ago",
-    status: "offline"
-  }
-];
-
-// Mock data for friend suggestions
-const mockSuggestions = [
-  { id: "4", name: "Jessica Power", joinedDate: "April 2023", mutualFriends: 2, avatar: "" },
-  { id: "5", name: "David Strong", joinedDate: "May 2023", mutualFriends: 1, avatar: "" },
-  { id: "6", name: "Emma Lift", joinedDate: "March 2023", mutualFriends: 3, avatar: "" }
-];
-
-// Mock data for friend requests
-const mockRequests = [
-  { id: "7", name: "Ryan Beast", requestDate: "2 days ago", avatar: "" },
-  { id: "8", name: "Olivia Muscle", requestDate: "5 days ago", avatar: "" }
-];
-
 const Pack = () => {
   const [activeTab, setActiveTab] = useState("friends");
   const [searchQuery, setSearchQuery] = useState("");
   const [showFriendDialog, setShowFriendDialog] = useState(false);
   const [selectedFriend, setSelectedFriend] = useState<FriendProfile | null>(null);
-  
-  // Filter friends based on search
-  const filteredFriends = mockFriends.filter(friend => 
+
+  const friends: FriendProfile[] = [];
+  const suggestions: { id: string; name: string; joinedDate: string; mutualFriends: number; avatar: string }[] = [];
+  const requests: { id: string; name: string; requestDate: string; avatar: string }[] = [];
+
+  const filteredFriends = friends.filter(friend => 
     friend.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
-  
+
   const handleViewProfile = (friend: FriendProfile) => {
     setSelectedFriend(friend);
     setShowFriendDialog(true);
   };
-  
+
   const handleAddFriend = (id: string, name: string) => {
     toast.success(`Friend request sent to ${name}`);
   };
-  
+
   const handleAcceptRequest = (id: string, name: string) => {
     toast.success(`You are now friends with ${name}`);
   };
-  
+
   const handleRejectRequest = (id: string, name: string) => {
     toast.success(`Friend request from ${name} declined`);
   };
@@ -135,13 +81,12 @@ const Pack = () => {
             value="requests" 
             className="data-[state=active]:text-wolf-purple data-[state=active]:bg-wolf-purple/10 text-wolf-silver"
           >
-            <Mail className="mr-2 h-4 w-4" /> Requests {mockRequests.length > 0 && (
-              <Badge className="ml-2 bg-wolf-purple text-wolf-dark">{mockRequests.length}</Badge>
+            <Mail className="mr-2 h-4 w-4" /> Requests {requests.length > 0 && (
+              <Badge className="ml-2 bg-wolf-purple text-wolf-dark">{requests.length}</Badge>
             )}
           </TabsTrigger>
         </TabsList>
         
-        {/* Search bar (shown on all tabs) */}
         <div className="mb-6">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-wolf-silver" />
@@ -154,7 +99,6 @@ const Pack = () => {
           </div>
         </div>
         
-        {/* Friends Tab Content */}
         <TabsContent value="friends" className="space-y-6">
           {filteredFriends.length === 0 ? (
             <Card className="glass-card border-wolf-purple/20">
@@ -211,7 +155,6 @@ const Pack = () => {
           )}
         </TabsContent>
         
-        {/* Suggestions Tab Content */}
         <TabsContent value="suggestions" className="space-y-6">
           <Card className="glass-card border-wolf-purple/20">
             <CardHeader>
@@ -219,7 +162,7 @@ const Pack = () => {
               <CardDescription className="text-wolf-silver">People you might want to train with</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {mockSuggestions.map(suggestion => (
+              {suggestions.map(suggestion => (
                 <div key={suggestion.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-wolf-charcoal transition-colors">
                   <div className="flex items-center space-x-4">
                     <Avatar className="h-10 w-10 border border-wolf-purple/30">
@@ -248,7 +191,6 @@ const Pack = () => {
           </Card>
         </TabsContent>
         
-        {/* Requests Tab Content */}
         <TabsContent value="requests" className="space-y-6">
           <Card className="glass-card border-wolf-purple/20">
             <CardHeader>
@@ -256,7 +198,7 @@ const Pack = () => {
               <CardDescription className="text-wolf-silver">People who want to join your pack</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {mockRequests.length > 0 ? mockRequests.map(request => (
+              {requests.length > 0 ? requests.map(request => (
                 <div key={request.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-wolf-charcoal transition-colors">
                   <div className="flex items-center space-x-4">
                     <Avatar className="h-10 w-10 border border-wolf-purple/30">
@@ -298,7 +240,6 @@ const Pack = () => {
         </TabsContent>
       </Tabs>
       
-      {/* Friend Profile Dialog */}
       <Dialog open={showFriendDialog && selectedFriend !== null} onOpenChange={setShowFriendDialog}>
         <DialogContent className="glass-card border-wolf-purple/20 text-white max-w-md">
           <DialogHeader>

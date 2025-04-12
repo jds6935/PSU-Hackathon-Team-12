@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -46,46 +45,6 @@ import { Progress } from "@/components/ui/progress";
 
 import RankBadge from "@/components/RankBadge";
 
-// Mock user data
-const userData = {
-  displayName: "Alpha Hunter",
-  email: "alpha@wolfpack.com",
-  bio: "Fitness enthusiast, always pushing my limits.",
-  fitnessGoal: "strength",
-  weightUnit: "kg",
-  avatar: "/public/lovable-uploads/09661d06-c457-416e-9cc4-69eca6a35989.png",
-  stats: {
-    joinedDate: "March 10, 2023",
-    totalWorkouts: 27,
-    xp: 380,
-    nextRankXp: 450,
-    rank: "Beta Wolf",
-    highestStreak: 7,
-    currentStreak: 4,
-    totalWeightLifted: "12,540 kg",
-  },
-  achievements: [
-    { id: "1", name: "First Blood", description: "Complete your first workout", earned: true, icon: Dumbbell, date: "March 10, 2023" },
-    { id: "2", name: "Hat-trick", description: "Complete 3 workouts in 3 consecutive days", earned: true, icon: Calendar, date: "March 15, 2023" },
-    { id: "3", name: "Week Warrior", description: "Complete 7 workouts in 7 consecutive days", earned: true, icon: Award, date: "March 25, 2023" },
-    { id: "4", name: "Century Club", description: "Lift a total of 10,000 kg", earned: true, icon: Trophy, date: "April 2, 2023" },
-    { id: "5", name: "Double Century", description: "Lift a total of 20,000 kg", earned: false, icon: Trophy, progress: 62 },
-    { id: "6", name: "Month Master", description: "Complete 30 workouts in 30 consecutive days", earned: false, icon: Calendar, progress: 27 },
-    { id: "7", name: "Alpha Status", description: "Reach Alpha Wolf rank", earned: false, icon: Medal, progress: 84 },
-  ]
-};
-
-const rankProgressions = [
-  { rank: "Runt of the Litter", minXp: 0, maxXp: 100, reached: true },
-  { rank: "Little Pup", minXp: 101, maxXp: 250, reached: true },
-  { rank: "Packling", minXp: 251, maxXp: 450, reached: true },
-  { rank: "Howler", minXp: 451, maxXp: 700, reached: false },
-  { rank: "Beta Wolf", minXp: 701, maxXp: 1000, reached: false },
-  { rank: "Alpha Wolf", minXp: 1001, maxXp: 1500, reached: false },
-  { rank: "Sigma Wolf", minXp: 1501, maxXp: 2500, reached: false },
-  { rank: "Sigma Wolf Elite", minXp: 2501, maxXp: null, reached: false },
-];
-
 // Form schema
 const profileFormSchema = z.object({
   displayName: z.string().min(3, "Display name must be at least 3 characters"),
@@ -101,6 +60,29 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
   const [isSaving, setIsSaving] = useState(false);
+
+  // Replace mock data with empty or external data source
+  const userData = {
+    displayName: "",
+    email: "",
+    bio: "",
+    fitnessGoal: "",
+    weightUnit: "",
+    avatar: "",
+    stats: {
+      joinedDate: "",
+      totalWorkouts: 0,
+      xp: 0,
+      nextRankXp: 0,
+      rank: "",
+      highestStreak: 0,
+      currentStreak: 0,
+      totalWeightLifted: "",
+    },
+    achievements: [],
+  };
+
+  const rankProgressions = [];
 
   const form = useForm<FormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -478,7 +460,7 @@ const Profile = () => {
                               <span>Progress</span>
                               <span>{achievement.progress}%</span>
                             </div>
-                            <Progress value={achievement.progress} className="h-1.5 bg-wolf-charcoal" indicatorClassName="bg-wolf-purple/50" />
+                            <Progress value={achievement.progress} className="h-1.5 bg-wolf-charcoal" />
                           </div>
                         )}
                       </div>
@@ -512,8 +494,7 @@ const Profile = () => {
                     <h4 className="text-white text-xl font-bold">{userData.stats.rank}</h4>
                     <Progress 
                       value={(userData.stats.xp / userData.stats.nextRankXp) * 100} 
-                      className="h-2 mt-2 bg-wolf-charcoal" 
-                      indicatorClassName="bg-wolf-purple" 
+                      className="h-2 mt-2 bg-wolf-charcoal bg-wolf-purple" 
                     />
                   </div>
                 </div>
@@ -548,7 +529,6 @@ const Profile = () => {
                           <Progress 
                             value={Math.round((userData.stats.xp - rank.minXp) / (rank.maxXp - rank.minXp) * 100)}
                             className="h-1.5 bg-wolf-charcoal"
-                            indicatorClassName="bg-wolf-purple"
                           />
                         </div>
                       )}

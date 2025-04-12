@@ -1,7 +1,7 @@
-
 export interface Exercise {
   id: string;
   name: string;
+  muscleGroup: string; // Ensure this property exists
   sets: number;
   reps: number;
   weight: string | number;
