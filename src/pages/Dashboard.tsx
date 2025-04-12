@@ -407,6 +407,7 @@ const Dashboard = () => {
                   rank={user.rank}
                   xp={user.xp}
                   nextRankXp={user.nextRankXp}
+                  iconSize="md"
                   className="mb-6"
                 />
                 

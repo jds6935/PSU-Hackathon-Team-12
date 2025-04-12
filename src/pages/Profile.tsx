@@ -47,6 +47,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Progress } from "@/components/ui/progress";
 
 import RankBadge from "@/components/RankBadge";
+import RankIcon from "@/components/RankIcon";
 
 // Form schema
 const profileFormSchema = z.object({
@@ -437,6 +438,8 @@ const Profile = () => {
                       rank={userData.stats.rank}
                       xp={userData.stats.xp}
                       nextRankXp={userData.stats.nextRankXp}
+                      iconSize="md"
+                      className="mt-2"
                     />
                   </div>
                   
@@ -748,10 +751,15 @@ const Profile = () => {
               </CardHeader>
               <CardContent>
                 <div className="mb-6">
-                  <div className="flex justify-between items-center mb-2">
+                  <div className="flex justify-between items-center mb-4">
                     <div>
-                      <h3 className="text-lg font-bold text-white">Current Rank: <span className="text-wolf-purple">{userData.stats.rank}</span></h3>
-                      <p className="text-sm text-wolf-silver">
+                      <h3 className="text-lg font-bold text-white flex items-center">
+                        Current Rank: 
+                        <span className="text-wolf-purple ml-2">
+                          {userData.stats.rank}
+                        </span>
+                      </h3>
+                      <p className="text-sm text-wolf-silver mt-1">
                         {userData.stats.xp} XP / {userData.stats.nextRankXp} XP needed for next rank
                       </p>
                     </div>
@@ -759,11 +767,12 @@ const Profile = () => {
                       rank={userData.stats.rank}
                       xp={userData.stats.xp}
                       nextRankXp={userData.stats.nextRankXp}
+                      iconSize="md"
                     />
                   </div>
                   <Progress 
                     value={(userData.stats.xp / userData.stats.nextRankXp) * 100} 
-                    className="h-2.5 bg-wolf-charcoal" 
+                    className="h-3 bg-wolf-charcoal" 
                   />
                 </div>
                 
@@ -783,31 +792,36 @@ const Profile = () => {
                       return (
                         <div 
                           key={rankTier.id} 
-                          className={`p-4 rounded-lg ${
+                          className={`p-6 rounded-lg ${
                             isCurrentRank ? 'bg-wolf-purple/10 border border-wolf-purple/30' : 
                             isLocked ? 'bg-wolf-charcoal/40 opacity-70' : 'bg-wolf-charcoal/60'
-                          }`}
+                          } mb-6`}
                         >
-                          <div className="flex items-center mb-3">
-                            <div className={`p-2 rounded-full ${
-                              isLocked ? 'bg-wolf-charcoal/60' : 'bg-wolf-purple/20'
-                            } mr-4`}>
+                          <div className="flex items-center mb-4">
+                            <div className="mr-4">
                               {isLocked ? (
-                                <Award className="h-6 w-6 text-wolf-silver/60" />
+                                <img 
+                                  src="/ranks/runt.png" 
+                                  alt="Locked rank" 
+                                  className="h-16 w-16 opacity-50"
+                                />
                               ) : (
-                                <Trophy className="h-6 w-6 text-wolf-purple" />
+                                <RankIcon 
+                                  rank={rankTier.rank} 
+                                  size="md"
+                                />
                               )}
                             </div>
                             <div className="flex-1">
-                              <div className="flex items-center justify-between mb-1">
-                                <h3 className="font-bold text-white">{rankTier.rank}</h3>
+                              <div className="flex items-center justify-between mb-2">
+                                <h3 className="font-bold text-white text-lg">{rankTier.rank}</h3>
                                 {isCurrentRank && (
-                                  <span className="text-xs bg-wolf-purple/20 text-wolf-purple py-0.5 px-2 rounded-full">
+                                  <span className="text-xs bg-wolf-purple/20 text-wolf-purple py-1 px-3 rounded-full">
                                     Current
                                   </span>
                                 )}
                               </div>
-                              <p className="text-sm text-wolf-silver">
+                              <p className="text-wolf-silver">
                                 {rankTier.minXp} XP required
                                 {index < rankProgressions.length - 1 && ` (${rankProgressions[index + 1].minXp - rankTier.minXp} XP to next rank)`}
                               </p>
@@ -815,13 +829,13 @@ const Profile = () => {
                           </div>
                           
                           <div className="w-full">
-                            <div className="flex justify-between text-xs text-wolf-silver mb-1">
+                            <div className="flex justify-between text-xs text-wolf-silver mb-2">
                               <span>Progress</span>
                               <span>{Math.round(progress)}%</span>
                             </div>
                             <Progress 
                               value={progress} 
-                              className="h-2 bg-wolf-dark" 
+                              className="h-3 bg-wolf-dark" 
                               style={{
                                 "--progress-fill": isLocked ? "var(--wolf-silver-30)" : "var(--wolf-purple)"
                               } as React.CSSProperties}
