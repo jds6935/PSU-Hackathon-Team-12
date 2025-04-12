@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Popover,
   PopoverContent,
@@ -246,130 +247,131 @@ const WorkoutForm = ({ onComplete }: WorkoutFormProps) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        {/* Workout Templates */}
-        <div className="mb-4">
-          <FormLabel className="text-wolf-silver mb-2 block">Quick Templates</FormLabel>
-          <div className="flex flex-wrap gap-2">
-            {workoutTemplates.map((template, i) => (
-              <Button 
-                key={i} 
-                type="button" 
-                variant="outline" 
-                size="sm"
-                onClick={() => applyTemplate(template)}
-                className="bg-wolf-charcoal/60 border-wolf-purple/20 text-wolf-silver hover:bg-wolf-purple/10 hover:text-white"
-              >
-                <Dumbbell className="mr-1 h-3 w-3" /> {template.name}
-              </Button>
-            ))}
-          </div>
-        </div>
+        <ScrollArea className="h-[calc(100vh-200px)] pr-4">
+          <div className="space-y-6">
+            {/* Workout Templates */}
+            <div className="mb-4">
+              <FormLabel className="text-wolf-silver mb-2 block">Quick Templates</FormLabel>
+              <div className="flex flex-wrap gap-2">
+                {workoutTemplates.map((template, i) => (
+                  <Button 
+                    key={i} 
+                    type="button" 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => applyTemplate(template)}
+                    className="bg-wolf-charcoal/60 border-wolf-purple/20 text-wolf-silver hover:bg-wolf-purple/10 hover:text-white"
+                  >
+                    <Dumbbell className="mr-1 h-3 w-3" /> {template.name}
+                  </Button>
+                ))}
+              </div>
+            </div>
 
-        {/* Workout Name */}
-        <FormField
-          control={form.control}
-          name="workoutName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-wolf-silver">Workout Name</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="e.g. Chest Day, Leg Day"
-                  className="bg-wolf-charcoal border-wolf-purple/20 text-white"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage className="text-red-400" />
-            </FormItem>
-          )}
-        />
-
-        {/* Date Selector */}
-        <FormField
-          control={form.control}
-          name="date"
-          render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel className="text-wolf-silver">Date</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
+            {/* Workout Name */}
+            <FormField
+              control={form.control}
+              name="workoutName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-wolf-silver">Workout Name</FormLabel>
                   <FormControl>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-full pl-3 text-left font-normal bg-wolf-charcoal border-wolf-purple/20",
-                        !field.value && "text-muted-foreground"
-                      )}
-                    >
-                      {field.value ? (
-                        format(field.value, "PPP")
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
+                    <Input
+                      placeholder="e.g. Chest Day, Leg Day"
+                      className="bg-wolf-charcoal border-wolf-purple/20 text-white"
+                      {...field}
+                    />
                   </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0 bg-wolf-charcoal border-wolf-purple/20" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    initialFocus
-                    className="p-3 pointer-events-auto"
-                  />
-                </PopoverContent>
-              </Popover>
-              <FormMessage className="text-red-400" />
-            </FormItem>
-          )}
-        />
+                  <FormMessage className="text-red-400" />
+                </FormItem>
+              )}
+            />
 
-        {/* Exercises */}
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <FormLabel className="text-wolf-silver">Exercises</FormLabel>
-            <Button 
-              type="button" 
-              variant="ghost" 
-              size="sm" 
-              onClick={addExercise}
-              className="text-wolf-purple hover:bg-wolf-purple/10"
-            >
-              <Plus className="h-4 w-4 mr-1" /> Add Exercise
-            </Button>
-          </div>
-          
-          <div className="space-y-4 relative">
-            {fields.map((field, index) => (
-              <div key={field.id} className="bg-wolf-charcoal/40 p-4 rounded-lg">
-                <div className="flex justify-between items-center mb-3">
-                  <h4 className="font-medium text-white">Exercise {index + 1}</h4>
-                  {fields.length > 1 && (
-                    <Button 
-                      type="button" 
-                      variant="ghost" 
-                      size="sm" 
-                      onClick={() => remove(index)}
-                      className="text-red-400 hover:text-red-500 hover:bg-red-500/10 h-8 w-8 p-0 rounded-full"
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  )}
-                </div>
-                
-                {/* Exercise Name with Autocomplete */}
-                <div className="space-y-4">
-                  <div className="relative">
-                    <FormField
-                      control={form.control}
-                      name={`exercises.${index}.name`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-wolf-silver">Exercise Name</FormLabel>
-                          <FormControl>
+            {/* Date */}
+            <FormField
+              control={form.control}
+              name="date"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel className="text-wolf-silver">Date</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-full pl-3 text-left font-normal bg-wolf-charcoal border-wolf-purple/20 text-white",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) =>
+                          date > new Date() || date < new Date("1900-01-01")
+                        }
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage className="text-red-400" />
+                </FormItem>
+              )}
+            />
+
+            {/* Exercises */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <FormLabel className="text-wolf-silver">Exercises</FormLabel>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={addExercise}
+                  className="bg-wolf-charcoal/60 border-wolf-purple/20 text-wolf-silver hover:bg-wolf-purple/10 hover:text-white"
+                >
+                  <Plus className="mr-1 h-3 w-3" /> Add Exercise
+                </Button>
+              </div>
+
+              {fields.map((field, index) => (
+                <div key={field.id} className="space-y-4 p-4 bg-wolf-charcoal/30 rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-wolf-silver font-medium">Exercise {index + 1}</h4>
+                    {fields.length > 1 && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => remove(index)}
+                        className="text-red-400 hover:text-red-300"
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+
+                  <FormField
+                    control={form.control}
+                    name={`exercises.${index}.name`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-wolf-silver">Name</FormLabel>
+                        <FormControl>
+                          <div className="relative">
                             <Input
-                              placeholder="e.g. Bench Press"
+                              placeholder="e.g. Bench Press, Squat"
                               className="bg-wolf-charcoal border-wolf-purple/20 text-white"
                               {...field}
                               onChange={(e) => {
@@ -377,36 +379,33 @@ const WorkoutForm = ({ onComplete }: WorkoutFormProps) => {
                                 handleExerciseChange(e.target.value, index);
                               }}
                             />
-                          </FormControl>
-                          <FormMessage className="text-red-400" />
-                        </FormItem>
-                      )}
-                    />
-                    {suggestions.some(s => s.startsWith(`${index}:`)) && (
-                      <div className="absolute z-10 mt-1 w-full rounded-md bg-wolf-charcoal border border-wolf-purple/20 shadow-lg">
-                        <ul className="max-h-60 overflow-auto py-1">
-                          {suggestions.map((suggestion) => {
-                            const [suggIndex, exercise] = suggestion.split(':');
-                            if (parseInt(suggIndex) === index) {
-                              return (
-                                <li
-                                  key={suggestion}
-                                  className="px-4 py-2 text-white hover:bg-wolf-purple/20 cursor-pointer"
-                                  onClick={() => selectSuggestion(suggestion)}
-                                >
-                                  {exercise}
-                                </li>
-                              );
-                            }
-                            return null;
-                          })}
-                        </ul>
-                      </div>
+                            {suggestions.length > 0 && suggestions[0].startsWith(`${index}:`) && (
+                              <div className="absolute top-0 left-0 right-0 mt-10 bg-wolf-charcoal border border-wolf-purple/20 rounded-md shadow-lg z-10">
+                                {suggestions.map((suggestion) => {
+                                  const [suggIndex, exercise] = suggestion.split(':');
+                                  if (parseInt(suggIndex) === index) {
+                                    return (
+                                      <div
+                                        key={suggestion}
+                                        className="px-4 py-2 hover:bg-wolf-purple/10 cursor-pointer text-wolf-silver"
+                                        onClick={() => selectSuggestion(suggestion)}
+                                      >
+                                        {exercise}
+                                      </div>
+                                    );
+                                  }
+                                  return null;
+                                })}
+                              </div>
+                            )}
+                          </div>
+                        </FormControl>
+                        <FormMessage className="text-red-400" />
+                      </FormItem>
                     )}
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    {/* Sets */}
+                  />
+
+                  <div className="grid grid-cols-3 gap-4">
                     <FormField
                       control={form.control}
                       name={`exercises.${index}.sets`}
@@ -416,9 +415,9 @@ const WorkoutForm = ({ onComplete }: WorkoutFormProps) => {
                           <FormControl>
                             <Input
                               type="number"
-                              placeholder="3"
-                              min={1}
-                              max={99}
+                              min="1"
+                              max="99"
+                              placeholder="e.g. 3"
                               className="bg-wolf-charcoal border-wolf-purple/20 text-white"
                               {...field}
                             />
@@ -427,8 +426,7 @@ const WorkoutForm = ({ onComplete }: WorkoutFormProps) => {
                         </FormItem>
                       )}
                     />
-                    
-                    {/* Reps */}
+
                     <FormField
                       control={form.control}
                       name={`exercises.${index}.reps`}
@@ -438,9 +436,9 @@ const WorkoutForm = ({ onComplete }: WorkoutFormProps) => {
                           <FormControl>
                             <Input
                               type="number"
-                              placeholder="10"
-                              min={1}
-                              max={999}
+                              min="1"
+                              max="999"
+                              placeholder="e.g. 10"
                               className="bg-wolf-charcoal border-wolf-purple/20 text-white"
                               {...field}
                             />
@@ -449,39 +447,17 @@ const WorkoutForm = ({ onComplete }: WorkoutFormProps) => {
                         </FormItem>
                       )}
                     />
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    {/* Weight */}
-                    <FormField
-                      control={form.control}
-                      name={`exercises.${index}.weight`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-wolf-silver">Weight (optional)</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="number"
-                              placeholder="50"
-                              min={0}
-                              step="0.5"
-                              className="bg-wolf-charcoal border-wolf-purple/20 text-white"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage className="text-red-400" />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    {/* Weight Unit */}
+
                     <FormField
                       control={form.control}
                       name={`exercises.${index}.weightUnit`}
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-wolf-silver">Unit</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
                             <FormControl>
                               <SelectTrigger className="bg-wolf-charcoal border-wolf-purple/20 text-white">
                                 <SelectValue placeholder="Select unit" />
@@ -498,30 +474,51 @@ const WorkoutForm = ({ onComplete }: WorkoutFormProps) => {
                       )}
                     />
                   </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
 
-        {/* Notes */}
-        <FormField
-          control={form.control}
-          name="notes"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-wolf-silver">Notes (optional)</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Any additional details about this workout..."
-                  className="resize-none bg-wolf-charcoal border-wolf-purple/20 text-white"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage className="text-red-400" />
-            </FormItem>
-          )}
-        />
+                  <FormField
+                    control={form.control}
+                    name={`exercises.${index}.weight`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-wolf-silver">Weight (optional)</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            min="0"
+                            step="0.1"
+                            placeholder="e.g. 60"
+                            className="bg-wolf-charcoal border-wolf-purple/20 text-white"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-red-400" />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              ))}
+            </div>
+
+            {/* Notes */}
+            <FormField
+              control={form.control}
+              name="notes"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-wolf-silver">Notes (optional)</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Any additional details about this workout..."
+                      className="resize-none bg-wolf-charcoal border-wolf-purple/20 text-white"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-400" />
+                </FormItem>
+              )}
+            />
+          </div>
+        </ScrollArea>
 
         <Button 
           type="submit" 

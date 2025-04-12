@@ -471,7 +471,7 @@ const Dashboard = () => {
             <div className="col-span-1 sm:col-span-2 mt-2">
               <Button
                 onClick={() => setShowWorkoutDialog(true)}
-                className="w-full h-14 bg-wolf-purple hover:bg-wolf-accent text-wolf-dark flex items-center justify-center text-lg"
+                className="w-full h-14 bg-wolf-purple hover:bg-wolf-accent text-wolf-dark flex items-center justify-center text-lg overflow-x-auto whitespace-nowrap"
               >
                 <Plus className="mr-2 h-5 w-5" /> Log Today's Workout
               </Button>
