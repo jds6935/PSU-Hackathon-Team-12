@@ -43,28 +43,7 @@ const MainLayout = () => {
       >
         <div className="h-full flex flex-col p-4">
           <div className="mb-8 flex items-center justify-center py-4">
-            <svg
-              viewBox="0 0 24 24"
-              width="24"
-              height="24"
-              stroke="currentColor"
-              strokeWidth="2"
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="mr-2 text-wolf-purple"
-            >
-              <path d="M16 16c1-1 2-3 2-5" />
-              <path d="M12 8c-1 2-1 4.5 0 6" />
-              <path d="M8 16c-1-1-2-3-2-5" />
-              <path d="M18 5c-.5-1.5-2-2-3.5-2" />
-              <path d="M19.5 7.5C22 10 22 14 19.5 16.5" />
-              <path d="M15.5 17c-1 1-2.5 1-3.5 0" />
-              <path d="M8.5 17c-1-1-2.5-1-3.5 0" />
-              <path d="M15.5 3C13 0.5 11 0.5 8.5 3" />
-              <path d="M6 5c-.5-1.5-2-2-3.5-2" />
-              <path d="M4.5 7.5C2 10 2 14 4.5 16.5" />
-            </svg>
+            <img src="/public/PackImage.png" className="mr-2 text-wolf-purple w-12 h-12" alt="Pack Image" />
             <h1 className="text-2xl font-extrabold wolf-text-gradient">WOLF PACK</h1>
           </div>
           
