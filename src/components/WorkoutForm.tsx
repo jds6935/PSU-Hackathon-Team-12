@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { z } from "zod";
@@ -6,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Calendar as CalendarIcon, Plus, X, ChevronDown, Dumbbell } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
+import supabase from "@/lib/supabaseClient";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -168,16 +168,56 @@ const WorkoutForm = ({ onComplete }: WorkoutFormProps) => {
   const onSubmit = async (data: FormValues) => {
     setLoading(true);
     try {
-      // For now, we'll just log the data, but in a real app we'd save to Supabase
-      console.log("Workout data:", {
-        ...data,
-        exercises: data.exercises.map(ex => ({
-          ...ex,
-          sets: parseInt(ex.sets),
-          reps: parseInt(ex.reps),
-          weight: ex.weight && ex.weight !== "" ? parseFloat(ex.weight) : 0,
-        }))
-      });
+      // Get current user ID
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error("You need to be logged in to log a workout");
+        return;
+      }
+      
+      // Format the exercises data
+      const formattedExercises = data.exercises.map(ex => ({
+        name: ex.name,
+        sets: parseInt(ex.sets),
+        reps: parseInt(ex.reps),
+        weight: ex.weight && ex.weight !== "" ? parseFloat(ex.weight) : 0,
+        weight_unit: ex.weightUnit,
+        muscle_group: "" // We don't collect this in the form currently
+      }));
+      
+      // Calculate XP gained (basic algorithm - 10 XP per exercise)
+      const xpGained = formattedExercises.length * 10;
+      
+      // Insert the workout first
+      const { data: workoutData, error: workoutError } = await supabase
+        .from('workouts')
+        .insert([
+          {
+            user_id: user.id,
+            name: data.workoutName,
+            date: format(data.date, 'yyyy-MM-dd'),
+            notes: data.notes || null,
+            xp_gained: xpGained
+          }
+        ])
+        .select();
+      
+      if (workoutError) throw workoutError;
+      
+      // Get the inserted workout ID
+      const workoutId = workoutData[0].id;
+      
+      // Insert the exercises linked to this workout
+      const exercisesWithWorkoutId = formattedExercises.map(exercise => ({
+        ...exercise,
+        workout_id: workoutId
+      }));
+      
+      const { error: exercisesError } = await supabase
+        .from('exercises')
+        .insert(exercisesWithWorkoutId);
+      
+      if (exercisesError) throw exercisesError;
       
       toast.success("Workout logged successfully!", {
         description: `${data.workoutName} with ${data.exercises.length} exercises`,

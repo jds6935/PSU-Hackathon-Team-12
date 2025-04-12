@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/form";
 import { toast } from "sonner";
 import { ArrowLeft, Loader2 } from "lucide-react";
+import supabase from "@/lib/supabaseClient";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -40,24 +41,52 @@ const Register = () => {
   const onSubmit = async (data: FormValues) => {
     setLoading(true);
     try {
-      // TODO: Integrate Supabase logic to create a new user account
-      console.log("Registering with:", data);
-
-      // TODO: Replace this toast with actual success handling after Supabase registration
-      toast.success("Account created successfully!", {
-        description: "You're now a member of the Wolf Pack!",
+      // Register user with Supabase auth
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
       });
 
-      // Simulate a delay for demo purposes
-      setTimeout(() => {
+      if (authError) throw authError;
+
+      if (authData.user) {
+        // Create a user profile in the users table
+        const { error: profileError } = await supabase
+          .from('users')
+          .insert([
+            {
+              id: authData.user.id,
+              display_name: data.displayName,
+              email: data.email,
+              password_hash: '', // Auth handles the password, this is for schema compatibility
+              fitness_goal: 'overall',
+              weight_unit: 'kg',
+              joined_date: new Date().toISOString(),
+            }
+          ]);
+
+        if (profileError) throw profileError;
+
+        toast.success("Account created successfully!", {
+          description: "You're now a member of the Wolf Pack!",
+        });
+
+        // Navigate to dashboard after successful registration
         navigate("/dashboard");
-      }, 1000);
-    } catch (error) {
-      // TODO: Handle Supabase registration errors here
+      }
+    } catch (error: any) {
       console.error("Registration error:", error);
-      toast.error("Registration failed", {
-        description: "Please try again later",
-      });
+      
+      // Handle different types of errors
+      if (error.message.includes("email")) {
+        toast.error("Registration failed", {
+          description: "This email is already in use.",
+        });
+      } else {
+        toast.error("Registration failed", {
+          description: error.message || "Please try again later",
+        });
+      }
     } finally {
       setLoading(false);
     }

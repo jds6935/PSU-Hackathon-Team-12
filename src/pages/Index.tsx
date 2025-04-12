@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import wolfLogo from "/public/lovable-uploads/769dfb24-6df1-498f-91e6-cd02c510c37f.png";
+import wolfLogo from "/lovable-uploads/769dfb24-6df1-498f-91e6-cd02c510c37f.png";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ const Index = () => {
     <div className="min-h-screen flex flex-col items-center justify-center bg-wolf-dark relative overflow-hidden">
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-b from-wolf-dark via-wolf-dark to-wolf-charcoal opacity-90"></div>
-        <div className="absolute inset-0 bg-[url('/public/lovable-uploads/d5aa01af-6cd1-46cb-bf31-145dc1a9ce28.png')] bg-cover bg-center opacity-20"></div>
+        <div className="absolute inset-0 bg-[url('/lovable-uploads/d5aa01af-6cd1-46cb-bf31-145dc1a9ce28.png')] bg-cover bg-center opacity-20"></div>
       </div>
       
       <div className="z-10 w-full max-w-md px-4 py-8 glass-card my-8">

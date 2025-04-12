@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   Dumbbell, 
   Trash2, 
@@ -24,6 +24,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { toast } from "sonner";
+import supabase from "@/lib/supabaseClient";
 
 import WorkoutForm from "@/components/WorkoutForm";
 import { Exercise, Workout } from "@/types/workout";
@@ -43,27 +44,205 @@ const groupWorkoutsByMonth = (workouts: Workout[]) => {
   }, {});
 };
 
+// Helper function to format date for display
+const formatDisplayDate = (dateStr: string) => {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+};
+
 const Workouts = () => {
   const [tab, setTab] = useState("history");
   const [searchQuery, setSearchQuery] = useState("");
   const [showAddDialog, setShowAddDialog] = useState(false);
-
-  // Replace mock data with empty or external data source
-  const exercises: Exercise[] = []; // #TODO: Fetch exercises from Supabase
-  const workoutHistory: Workout[] = []; // #TODO: Fetch workout history from Supabase
-  const [groupedWorkouts, setGroupedWorkouts] = useState(() => groupWorkoutsByMonth(workoutHistory));
+  const [loading, setLoading] = useState(true);
+  const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [workoutHistory, setWorkoutHistory] = useState<Workout[]>([]);
+  const [groupedWorkouts, setGroupedWorkouts] = useState<Record<string, Workout[]>>({});
+  
+  // Fetch exercises and workout history on component mount
+  useEffect(() => {
+    const fetchExercisesAndWorkouts = async () => {
+      setLoading(true);
+      try {
+        // Get the current user's ID
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          toast.error("User not authenticated");
+          return;
+        }
+        
+        // Fetch workouts
+        const { data: workoutsData, error: workoutsError } = await supabase
+          .from('workouts')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('date', { ascending: false });
+          
+        if (workoutsError) throw workoutsError;
+        
+        // For each workout, fetch its exercises
+        const workoutsWithExercises: Workout[] = [];
+        
+        for (const workout of workoutsData || []) {
+          const { data: exercisesData, error: exercisesError } = await supabase
+            .from('exercises')
+            .select('*')
+            .eq('workout_id', workout.id);
+            
+          if (exercisesError) throw exercisesError;
+          
+          // Convert database fields to match our frontend model
+          const formattedExercises: Exercise[] = (exercisesData || []).map(ex => ({
+            id: ex.id,
+            name: ex.name,
+            muscleGroup: ex.muscle_group || '',
+            sets: ex.sets,
+            reps: ex.reps,
+            weight: ex.weight || 0,
+            weightUnit: ex.weight_unit
+          }));
+          
+          workoutsWithExercises.push({
+            id: workout.id,
+            name: workout.name,
+            date: workout.date,
+            displayDate: formatDisplayDate(workout.date),
+            exercises: formattedExercises,
+            notes: workout.notes,
+            xpGained: workout.xp_gained
+          });
+        }
+        
+        setWorkoutHistory(workoutsWithExercises);
+        setGroupedWorkouts(groupWorkoutsByMonth(workoutsWithExercises));
+        
+        // Fetch unique exercises for the exercise database tab
+        const { data: uniqueExercisesData, error: uniqueExercisesError } = await supabase
+          .from('exercises')
+          .select('id, name, muscle_group')
+          .order('name');
+          
+        if (uniqueExercisesError) throw uniqueExercisesError;
+        
+        // Remove duplicates by name (keep only unique exercise names)
+        const uniqueExerciseNames = new Set();
+        const uniqueExercises: Exercise[] = [];
+        
+        (uniqueExercisesData || []).forEach(ex => {
+          if (!uniqueExerciseNames.has(ex.name.toLowerCase())) {
+            uniqueExerciseNames.add(ex.name.toLowerCase());
+            uniqueExercises.push({
+              id: ex.id,
+              name: ex.name,
+              muscleGroup: ex.muscle_group || '',
+              sets: 0,
+              reps: 0,
+              weight: 0
+            });
+          }
+        });
+        
+        setExercises(uniqueExercises);
+        
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        toast.error('Failed to load workouts and exercises');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchExercisesAndWorkouts();
+  }, []);
   
   // Filter exercises based on search
   const filteredExercises = exercises.filter((exercise) => 
-    exercise.name.toLowerCase().includes(searchQuery.toLowerCase())
+    exercise.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (exercise.muscleGroup && exercise.muscleGroup.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
-  const handleDeleteWorkout = (workoutId: string) => {
-    // #TODO: Delete workout from Supabase
-    toast.success("Workout deleted successfully");
-    // Then update the state
-    const updatedWorkoutHistory = workoutHistory.filter(w => w.id !== workoutId);
-    setGroupedWorkouts(groupWorkoutsByMonth(updatedWorkoutHistory));
+  const handleDeleteWorkout = async (workoutId: string) => {
+    try {
+      // Delete workout from Supabase
+      const { error } = await supabase
+        .from('workouts')
+        .delete()
+        .eq('id', workoutId);
+        
+      if (error) throw error;
+      
+      toast.success("Workout deleted successfully");
+      
+      // Update state
+      const updatedWorkoutHistory = workoutHistory.filter(w => w.id !== workoutId);
+      setWorkoutHistory(updatedWorkoutHistory);
+      setGroupedWorkouts(groupWorkoutsByMonth(updatedWorkoutHistory));
+    } catch (error) {
+      console.error('Error deleting workout:', error);
+      toast.error('Failed to delete workout');
+    }
+  };
+
+  const handleWorkoutAdded = () => {
+    // Refetch workouts when a new one is added
+    setShowAddDialog(false);
+    
+    // Get the current user's ID and fetch workouts again
+    const fetchWorkouts = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+        
+        // Fetch workouts
+        const { data: workoutsData, error: workoutsError } = await supabase
+          .from('workouts')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('date', { ascending: false });
+          
+        if (workoutsError) throw workoutsError;
+        
+        // For each workout, fetch its exercises
+        const workoutsWithExercises: Workout[] = [];
+        
+        for (const workout of workoutsData || []) {
+          const { data: exercisesData, error: exercisesError } = await supabase
+            .from('exercises')
+            .select('*')
+            .eq('workout_id', workout.id);
+            
+          if (exercisesError) throw exercisesError;
+          
+          // Convert database fields to match our frontend model
+          const formattedExercises: Exercise[] = (exercisesData || []).map(ex => ({
+            id: ex.id,
+            name: ex.name,
+            muscleGroup: ex.muscle_group || '',
+            sets: ex.sets,
+            reps: ex.reps,
+            weight: ex.weight || 0,
+            weightUnit: ex.weight_unit
+          }));
+          
+          workoutsWithExercises.push({
+            id: workout.id,
+            name: workout.name,
+            date: workout.date,
+            displayDate: formatDisplayDate(workout.date),
+            exercises: formattedExercises,
+            notes: workout.notes,
+            xpGained: workout.xp_gained
+          });
+        }
+        
+        setWorkoutHistory(workoutsWithExercises);
+        setGroupedWorkouts(groupWorkoutsByMonth(workoutsWithExercises));
+      } catch (error) {
+        console.error('Error refetching workouts:', error);
+      }
+    };
+    
+    fetchWorkouts();
   };
 
   return (
@@ -94,7 +273,11 @@ const Workouts = () => {
         </TabsList>
         
         <TabsContent value="history" className="space-y-6">
-          {Object.entries(groupedWorkouts).length === 0 ? (
+          {loading ? (
+            <div className="flex justify-center p-8">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-wolf-purple"></div>
+            </div>
+          ) : Object.entries(groupedWorkouts).length === 0 ? (
             <Alert className="glass-card border-wolf-purple/20">
               <Dumbbell className="h-5 w-5 text-wolf-purple" />
               <AlertTitle className="text-white">No workouts yet</AlertTitle>
@@ -144,7 +327,7 @@ const Workouts = () => {
                           <div className="flex-1">
                             <h4 className="font-medium text-white">{exercise.name}</h4>
                             <p className="text-sm text-wolf-silver">
-                              {exercise.sets} sets × {exercise.reps} reps • {exercise.weight}
+                              {exercise.sets} sets × {exercise.reps} reps • {exercise.weight} {exercise.weightUnit}
                             </p>
                           </div>
                         </div>
@@ -177,7 +360,11 @@ const Workouts = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {filteredExercises.length === 0 ? (
+            {loading ? (
+              <div className="col-span-2 flex justify-center p-8">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-wolf-purple"></div>
+              </div>
+            ) : filteredExercises.length === 0 ? (
               <div className="col-span-2 text-center py-10">
                 <p className="text-wolf-silver">No exercises found matching your search</p>
               </div>
@@ -217,7 +404,7 @@ const Workouts = () => {
           </DialogHeader>
           <ScrollArea className="max-h-[70vh]">
             <div className="p-1">
-              <WorkoutForm onComplete={() => setShowAddDialog(false)} />
+              <WorkoutForm onComplete={handleWorkoutAdded} />
             </div>
           </ScrollArea>
         </DialogContent>

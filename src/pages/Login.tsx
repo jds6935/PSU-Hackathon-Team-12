@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/form";
 import { toast } from "sonner";
 import { ArrowLeft, Loader2 } from "lucide-react";
+import supabase from "@/lib/supabaseClient";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -38,24 +39,65 @@ const Login = () => {
   const onSubmit = async (data: FormValues) => {
     setLoading(true);
     try {
-      // TODO: Integrate Supabase authentication logic here
-      console.log("Logging in with:", data);
-      
-      // TODO: Replace this toast with actual success handling after Supabase login
-      toast.success("Welcome back to the pack!", {
-        description: "Login successful",
+      // Sign in with Supabase authentication
+      const { data: authData, error } = await supabase.auth.signInWithPassword({
+        email: data.email,
+        password: data.password,
       });
       
-      // Simulate a delay for demo purposes
-      setTimeout(() => {
+      if (error) throw error;
+      
+      if (authData.user) {
+        // Fetch user profile information
+        const { data: userData, error: profileError } = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', authData.user.id)
+          .single();
+          
+        if (profileError && profileError.code !== 'PGRST116') {
+          // PGRST116 is the error code for "no rows returned"
+          throw profileError;
+        }
+        
+        // If user exists in auth but not in profiles table, create profile
+        if (!userData) {
+          const { error: insertError } = await supabase
+            .from('users')
+            .insert([
+              {
+                id: authData.user.id,
+                display_name: authData.user.email?.split('@')[0] || 'User',
+                email: authData.user.email || '',
+                password_hash: '',
+                fitness_goal: 'overall',
+                weight_unit: 'kg',
+                joined_date: new Date().toISOString(),
+              }
+            ]);
+            
+          if (insertError) throw insertError;
+        }
+        
+        toast.success("Welcome back to the pack!", {
+          description: "Login successful",
+        });
+        
+        // Navigate to dashboard
         navigate("/dashboard");
-      }, 1000);
-    } catch (error) {
-      // TODO: Handle Supabase login errors here
+      }
+    } catch (error: any) {
       console.error("Login error:", error);
-      toast.error("Login failed", {
-        description: "Invalid email or password",
-      });
+      
+      if (error.message.includes("Invalid login credentials")) {
+        toast.error("Login failed", {
+          description: "Invalid email or password",
+        });
+      } else {
+        toast.error("Login failed", {
+          description: error.message || "An error occurred",
+        });
+      }
     } finally {
       setLoading(false);
     }

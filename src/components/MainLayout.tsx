@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -27,6 +26,7 @@ const MainLayout = () => {
     navigate("/");
   };
 
+  
   const navItems = [
     { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { path: "/workouts", label: "Workouts", icon: Dumbbell },
@@ -43,7 +43,7 @@ const MainLayout = () => {
       >
         <div className="h-full flex flex-col p-4">
           <div className="mb-8 flex items-center justify-center py-4">
-            <img src="/public/PackImage.png" className="mr-2 text-wolf-purple w-12 h-12" alt="Pack Image" />
+            <img src="/PackImage.png" className="mr-2 text-wolf-purple w-12 h-12" alt="Pack Image" />
             <h1 className="text-2xl font-extrabold wolf-text-gradient">WOLF PACK</h1>
           </div>
           
