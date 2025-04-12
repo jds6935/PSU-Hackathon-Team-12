@@ -1,10 +1,11 @@
-
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import wolfLogo from "/public/lovable-uploads/769dfb24-6df1-498f-91e6-cd02c510c37f.png";
 
 const Index = () => {
   const navigate = useNavigate();
+
+  // TODO: Fetch any necessary data from Supabase for the landing page (e.g., stats, announcements)
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-wolf-dark relative overflow-hidden">

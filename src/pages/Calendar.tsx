@@ -22,6 +22,18 @@ const groupWorkoutsByMonth = (workouts: Workout[]) => {
   }, {});
 };
 
+// Check if a date has a workout
+const hasWorkout = (date: Date) => {
+  // TODO: Fetch workout data for the given date from Supabase
+  return false; // Replace with actual logic to check for workouts
+};
+
+// Get workout details for a date
+const getWorkoutForDate = (date: Date) => {
+  // TODO: Fetch workout details for the given date from Supabase
+  return null; // Replace with actual logic to fetch workout details
+};
+
 const Calendar = () => {
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
   const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(null);
@@ -29,15 +41,8 @@ const Calendar = () => {
   const [groupedWorkouts, setGroupedWorkouts] = useState(() => groupWorkoutsByMonth([]));
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
 
-  // Check if a date has a workout
-  const hasWorkout = (date: Date) => {
-    return false; // Replace with actual logic to check for workouts
-  };
-
-  // Get workout details for a date
-  const getWorkoutForDate = (date: Date) => {
-    return null; // Replace with actual logic to fetch workout details
-  };
+  // TODO: Fetch all workouts from Supabase and group them by month
+  // Example: Use useEffect to fetch data and update groupedWorkouts state
 
   const handleDateClick = (date: Date) => {
     setSelectedDate(date);

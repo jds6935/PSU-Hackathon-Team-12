@@ -25,6 +25,10 @@ const Pack = () => {
   const suggestions: { id: string; name: string; joinedDate: string; mutualFriends: number; avatar: string }[] = [];
   const requests: { id: string; name: string; requestDate: string; avatar: string }[] = [];
 
+  // TODO: Fetch friends list from Supabase and populate the `friends` array
+  // TODO: Fetch friend suggestions from Supabase and populate the `suggestions` array
+  // TODO: Fetch friend requests from Supabase and populate the `requests` array
+
   const filteredFriends = friends.filter(friend => 
     friend.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -35,14 +39,17 @@ const Pack = () => {
   };
 
   const handleAddFriend = (id: string, name: string) => {
+    // TODO: Add logic to send a friend request via Supabase
     toast.success(`Friend request sent to ${name}`);
   };
 
   const handleAcceptRequest = (id: string, name: string) => {
+    // TODO: Add logic to accept a friend request via Supabase
     toast.success(`You are now friends with ${name}`);
   };
 
   const handleRejectRequest = (id: string, name: string) => {
+    // TODO: Add logic to reject a friend request via Supabase
     toast.success(`Friend request from ${name} declined`);
   };
 

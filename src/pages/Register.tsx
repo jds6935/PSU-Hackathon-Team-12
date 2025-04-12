@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -41,19 +40,20 @@ const Register = () => {
   const onSubmit = async (data: FormValues) => {
     setLoading(true);
     try {
-      // In a real implementation, this would connect to Supabase
+      // TODO: Integrate Supabase logic to create a new user account
       console.log("Registering with:", data);
-      
-      // Show toast for now since we don't have Supabase integration yet
+
+      // TODO: Replace this toast with actual success handling after Supabase registration
       toast.success("Account created successfully!", {
         description: "You're now a member of the Wolf Pack!",
       });
-      
+
       // Simulate a delay for demo purposes
       setTimeout(() => {
         navigate("/dashboard");
       }, 1000);
     } catch (error) {
+      // TODO: Handle Supabase registration errors here
       console.error("Registration error:", error);
       toast.error("Registration failed", {
         description: "Please try again later",

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -39,10 +38,10 @@ const Login = () => {
   const onSubmit = async (data: FormValues) => {
     setLoading(true);
     try {
-      // In a real implementation, this would connect to Supabase
+      // TODO: Integrate Supabase authentication logic here
       console.log("Logging in with:", data);
       
-      // Show toast for now since we don't have Supabase integration yet
+      // TODO: Replace this toast with actual success handling after Supabase login
       toast.success("Welcome back to the pack!", {
         description: "Login successful",
       });
@@ -52,6 +51,7 @@ const Login = () => {
         navigate("/dashboard");
       }, 1000);
     } catch (error) {
+      // TODO: Handle Supabase login errors here
       console.error("Login error:", error);
       toast.error("Login failed", {
         description: "Invalid email or password",

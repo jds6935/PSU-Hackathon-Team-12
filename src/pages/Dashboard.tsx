@@ -36,6 +36,8 @@ const Dashboard = () => {
     avatar: ""
   };
 
+  // TODO: Fetch user profile data from Supabase and populate the `user` object
+
   const stats = {
     workoutsThisWeek: 0,
     workoutsLastWeek: 0,
@@ -46,9 +48,13 @@ const Dashboard = () => {
     }
   };
 
+  // TODO: Fetch stats data from Supabase and populate the `stats` object
+
   const recentWorkouts: Workout[] = [];
   const todayXP = 0;
   const xpToEarn = 0;
+
+  // TODO: Fetch recent workouts and XP data from Supabase and populate `recentWorkouts`, `todayXP`, and `xpToEarn`
 
   return (
     <>

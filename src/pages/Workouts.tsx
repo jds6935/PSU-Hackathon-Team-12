@@ -49,8 +49,8 @@ const Workouts = () => {
   const [showAddDialog, setShowAddDialog] = useState(false);
 
   // Replace mock data with empty or external data source
-  const exercises: Exercise[] = [];
-  const workoutHistory: Workout[] = [];
+  const exercises: Exercise[] = []; // #TODO: Fetch exercises from Supabase
+  const workoutHistory: Workout[] = []; // #TODO: Fetch workout history from Supabase
   const [groupedWorkouts, setGroupedWorkouts] = useState(() => groupWorkoutsByMonth(workoutHistory));
   
   // Filter exercises based on search
@@ -59,7 +59,7 @@ const Workouts = () => {
   );
 
   const handleDeleteWorkout = (workoutId: string) => {
-    // In a real app, we would delete from Supabase here
+    // #TODO: Delete workout from Supabase
     toast.success("Workout deleted successfully");
     // Then update the state
     const updatedWorkoutHistory = workoutHistory.filter(w => w.id !== workoutId);

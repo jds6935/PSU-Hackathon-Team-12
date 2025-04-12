@@ -61,7 +61,6 @@ const Profile = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const [isSaving, setIsSaving] = useState(false);
 
-  // Replace mock data with empty or external data source
   const userData = {
     displayName: "",
     email: "",
@@ -84,6 +83,9 @@ const Profile = () => {
 
   const rankProgressions = [];
 
+  // TODO: Fetch user profile data from Supabase and populate `userData`
+  // TODO: Fetch rank progression data from Supabase and populate `rankProgressions`
+
   const form = useForm<FormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
@@ -98,7 +100,7 @@ const Profile = () => {
   const onSubmit = async (data: FormValues) => {
     setIsSaving(true);
     try {
-      // Here we would update the user data in Supabase
+      // TODO: Update user profile data in Supabase
       console.log("Updating profile:", data);
       
       // Simulate API delay
@@ -481,6 +483,7 @@ const Profile = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
+              {/* TODO: Fetch rank progression details from Supabase */}
               <div className="mb-8 p-4 bg-wolf-charcoal rounded-lg">
                 <div className="flex justify-between items-center mb-2">
                   <h3 className="font-medium text-white">Current Rank</h3>
