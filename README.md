@@ -76,7 +76,7 @@ Each rank comes with its own unique badge icon to showcase your progress!
 
 5. **Open your browser**
    
-   Navigate to `http://localhost:5173` to see the application
+   Navigate to `http://localhost:8080` to see the application
 
 ## 📱 Application Structure
 
