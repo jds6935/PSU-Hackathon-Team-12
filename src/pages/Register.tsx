@@ -68,7 +68,7 @@ const Register = () => {
         if (profileError) throw profileError;
 
         toast.success("Account created successfully!", {
-          description: "You're now a member of the Wolf Pack!",
+          description: "You're now a member of MyPack!",
         });
 
         // Navigate to dashboard after successful registration
@@ -104,7 +104,7 @@ const Register = () => {
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <h1 className="text-2xl font-bold wolf-text-gradient">Join The Pack</h1>
+          <h1 className="text-2xl font-bold wolf-text-gradient">Join MyPack</h1>
         </div>
 
         <Form {...form}>
@@ -136,7 +136,7 @@ const Register = () => {
                   <FormControl>
                     <Input
                       type="email"
-                      placeholder="alpha@wolfpack.com"
+                      placeholder="yourname@example.com"
                       className="bg-wolf-charcoal border-wolf-purple/20 text-white"
                       {...field}
                     />
@@ -181,7 +181,7 @@ const Register = () => {
 
         <div className="mt-6 text-center">
           <p className="text-wolf-silver text-sm">
-            Already part of the pack?{" "}
+            Already a member?{" "}
             <Link to="/login" className="text-wolf-purple hover:text-wolf-accent">
               Log In
             </Link>

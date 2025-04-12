@@ -115,7 +115,7 @@ const Login = () => {
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <h1 className="text-2xl font-bold wolf-text-gradient">Return To The Pack</h1>
+          <h1 className="text-2xl font-bold wolf-text-gradient">Login to MyPack</h1>
         </div>
 
         <Form {...form}>
@@ -129,7 +129,7 @@ const Login = () => {
                   <FormControl>
                     <Input
                       type="email"
-                      placeholder="alpha@wolfpack.com"
+                      placeholder="yourname@example.com"
                       className="bg-wolf-charcoal border-wolf-purple/20 text-white"
                       {...field}
                     />
@@ -174,7 +174,7 @@ const Login = () => {
 
         <div className="mt-6 text-center">
           <p className="text-wolf-silver text-sm">
-            New to the pack?{" "}
+            New to MyPack?{" "}
             <Link to="/register" className="text-wolf-purple hover:text-wolf-accent">
               Join Now
             </Link>

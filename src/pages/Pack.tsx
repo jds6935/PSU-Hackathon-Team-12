@@ -354,8 +354,8 @@ const Pack = () => {
     <>
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-wolf-silver">Pack</h1>
-          <p className="text-wolf-silver/60">Train with your fellow wolves</p>
+          <h1 className="text-3xl font-bold text-wolf-silver">Friends</h1>
+          <p className="text-wolf-silver/60">Connect with other members</p>
         </div>
         <div className="flex gap-2">
           <Button 

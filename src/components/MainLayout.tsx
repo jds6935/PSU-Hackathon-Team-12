@@ -31,7 +31,7 @@ const MainLayout = () => {
     { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { path: "/workouts", label: "Workouts", icon: Dumbbell },
     { path: "/calendar", label: "Calendar", icon: Calendar },
-    { path: "/pack", label: "Pack", icon: Users },
+    { path: "/pack", label: "Friends", icon: Users },
     { path: "/profile", label: "Profile", icon: User },
   ];
 
@@ -44,7 +44,7 @@ const MainLayout = () => {
         <div className="h-full flex flex-col p-4">
           <div className="mb-8 flex items-center justify-center py-4">
             <img src="/PackImage.png" className="mr-2 text-wolf-purple w-12 h-12" alt="Pack Image" />
-            <h1 className="text-2xl font-extrabold wolf-text-gradient">WOLF PACK</h1>
+            <h1 className="text-2xl font-extrabold wolf-text-gradient">MYPACK</h1>
           </div>
           
           <nav className="flex-1 space-y-1">
@@ -110,7 +110,7 @@ const MainLayout = () => {
                     <path d="M6 5c-.5-1.5-2-2-3.5-2" />
                     <path d="M4.5 7.5C2 10 2 14 4.5 16.5" />
                   </svg>
-                  <h1 className="text-2xl font-extrabold wolf-text-gradient">WOLF PACK</h1>
+                  <h1 className="text-2xl font-extrabold wolf-text-gradient">MYPACK</h1>
                 </div>
                 <Button
                   variant="ghost" 

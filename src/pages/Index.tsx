@@ -18,11 +18,11 @@ const Index = () => {
         <div className="flex flex-col items-center text-center">
           <img 
             src={wolfLogo} 
-            alt="Wolf Pack Ascend Logo" 
+            alt="MyPack Logo" 
             className="w-24 h-24 mb-6 rounded-full border-2 border-wolf-purple" 
           />
           <h1 className="text-4xl font-extrabold tracking-tight mb-2 wolf-text-gradient">
-            WOLF PACK ASCEND
+            MYPACK
           </h1>
           <p className="text-wolf-silver text-lg mb-8">Rise through the ranks. Become the Alpha.</p>
           
