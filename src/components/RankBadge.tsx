@@ -1,5 +1,6 @@
 
 import { Progress } from "@/components/ui/progress";
+import { CustomProgress } from "@/components/ui/custom-progress";
 
 interface RankBadgeProps {
   rank: string;
@@ -29,7 +30,7 @@ const RankBadge = ({ rank, xp, nextRankXp, className = "" }: RankBadgeProps) => 
         {rank}
       </div>
       <div className="mt-2 flex items-center gap-2 text-xs">
-        <Progress value={progressPercent} className="h-2 bg-wolf-charcoal" indicatorClassName="bg-wolf-purple" />
+        <CustomProgress value={progressPercent} className="h-2 bg-wolf-charcoal" indicatorClassName="bg-wolf-purple" />
         <span className="text-wolf-silver">
           {xp}/{nextRankXp} XP
         </span>
