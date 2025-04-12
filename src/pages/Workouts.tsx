@@ -58,6 +58,7 @@ const Workouts = () => {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [workoutHistory, setWorkoutHistory] = useState<Workout[]>([]);
   const [groupedWorkouts, setGroupedWorkouts] = useState<Record<string, Workout[]>>({});
+  const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
   
   // Fetch exercises and workout history on component mount
   useEffect(() => {
@@ -184,10 +185,9 @@ const Workouts = () => {
   };
 
   const handleWorkoutAdded = () => {
-    // Refetch workouts when a new one is added
     setShowAddDialog(false);
-    
-    // Get the current user's ID and fetch workouts again
+    setSelectedExercise(null);
+    // Refetch workouts when a new one is added
     const fetchWorkouts = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
@@ -374,6 +374,7 @@ const Workouts = () => {
                   key={exercise.id} 
                   className="glass-card p-4 border-none flex items-center justify-between hover:bg-wolf-purple/5 cursor-pointer transition-colors"
                   onClick={() => {
+                    setSelectedExercise(exercise);
                     setShowAddDialog(true);
                   }}
                 >
@@ -397,14 +398,17 @@ const Workouts = () => {
       </Tabs>
 
       {/* Add workout dialog */}
-      <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
+      <Dialog open={showAddDialog} onOpenChange={(open) => {
+        setShowAddDialog(open);
+        if (!open) setSelectedExercise(null);
+      }}>
         <DialogContent className="glass-card border-wolf-purple/20 text-white max-w-md">
           <DialogHeader>
             <DialogTitle className="text-xl text-center mb-2 wolf-text-gradient">Log Workout</DialogTitle>
           </DialogHeader>
           <ScrollArea className="max-h-[70vh]">
             <div className="p-1">
-              <WorkoutForm onComplete={handleWorkoutAdded} />
+              <WorkoutForm onComplete={handleWorkoutAdded} initialExercise={selectedExercise} />
             </div>
           </ScrollArea>
         </DialogContent>

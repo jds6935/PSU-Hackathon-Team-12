@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import wolfLogo from "/lovable-uploads/769dfb24-6df1-498f-91e6-cd02c510c37f.png";
+import wolfLogo from "/PackImage.png";
 
 const Index = () => {
   const navigate = useNavigate();

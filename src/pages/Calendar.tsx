@@ -118,6 +118,7 @@ const Calendar = () => {
   const calculateMonthStats = (workouts: Workout[], month: Date) => {
     const currentMonthStart = new Date(month.getFullYear(), month.getMonth(), 1);
     const currentMonthEnd = new Date(month.getFullYear(), month.getMonth() + 1, 0);
+    const today = new Date();
     
     // Filter workouts for current month
     const monthWorkouts = workouts.filter(workout => {
@@ -125,8 +126,9 @@ const Calendar = () => {
       return workoutDate >= currentMonthStart && workoutDate <= currentMonthEnd;
     });
     
-    // Calculate total days in month
-    const daysInMonth = currentMonthEnd.getDate();
+    // Calculate days since start of month (up to today)
+    const endDate = today < currentMonthEnd ? today : currentMonthEnd;
+    const daysSinceMonthStart = Math.floor((endDate.getTime() - currentMonthStart.getTime()) / (1000 * 60 * 60 * 24)) + 1;
     
     // Calculate workout days (unique dates)
     const uniqueDates = new Set(monthWorkouts.map(w => format(new Date(w.date), 'yyyy-MM-dd')));
@@ -135,8 +137,8 @@ const Calendar = () => {
     // Calculate total XP earned
     const totalXP = monthWorkouts.reduce((sum, workout) => sum + workout.xpGained, 0);
     
-    // Calculate consistency rate
-    const consistencyRate = Math.round((workoutDays / daysInMonth) * 100);
+    // Calculate consistency rate based on days since month start
+    const consistencyRate = Math.round((workoutDays / daysSinceMonthStart) * 100);
     
     setMonthStats({
       workoutDays,
@@ -332,7 +334,7 @@ const Calendar = () => {
             </div>
           </div>
           <div className="bg-wolf-charcoal p-4 rounded-lg">
-            <div className="text-wolf-silver text-sm">Consistency Rate</div>
+            <div className="text-wolf-silver text-sm">Consistency This Month</div>
             <div className="text-2xl font-bold text-white mt-1">
               {monthStats.consistencyRate}%
             </div>

@@ -71,6 +71,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 interface WorkoutFormProps {
   onComplete?: () => void;
+  initialExercise?: Exercise | null;
 }
 
 const popularExercises = [
@@ -115,7 +116,7 @@ const workoutTemplates = [
   },
 ];
 
-const WorkoutForm = ({ onComplete }: WorkoutFormProps) => {
+const WorkoutForm = ({ onComplete, initialExercise }: WorkoutFormProps) => {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -124,7 +125,15 @@ const WorkoutForm = ({ onComplete }: WorkoutFormProps) => {
     defaultValues: {
       workoutName: "",
       date: new Date(),
-      exercises: [
+      exercises: initialExercise ? [
+        { 
+          name: initialExercise.name,
+          sets: initialExercise.sets.toString(),
+          reps: initialExercise.reps.toString(),
+          weight: initialExercise.weight ? initialExercise.weight.toString() : "",
+          weightUnit: initialExercise.weightUnit || "kg"
+        }
+      ] : [
         { name: "", sets: "", reps: "", weight: "", weightUnit: "kg" }
       ],
       notes: "",
