@@ -799,18 +799,11 @@ const Profile = () => {
                         >
                           <div className="flex items-center mb-4">
                             <div className="mr-4">
-                              {isLocked ? (
-                                <img 
-                                  src="/ranks/runt.png" 
-                                  alt="Locked rank" 
-                                  className="h-16 w-16 opacity-50"
-                                />
-                              ) : (
-                                <RankIcon 
-                                  rank={rankTier.rank} 
-                                  size="md"
-                                />
-                              )}
+                              <RankIcon 
+                                rank={rankTier.rank} 
+                                size="md"
+                                className={isLocked ? "opacity-50" : ""}
+                              />
                             </div>
                             <div className="flex-1">
                               <div className="flex items-center justify-between mb-2">

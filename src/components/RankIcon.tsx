@@ -11,22 +11,25 @@ const rankIconMap: Record<string, string> = {
   "Baby Pup": "/ranks/baby_pup.png",
   "Puplet": "/ranks/puplet.png",
   "Runt": "/ranks/runt.png",
-  "Runt of the Litter": "/ranks/runt.png",
-  "Little Pup": "/ranks/baby_pup.png",
-  "Packling": "/ranks/puplet.png", 
-  "Howler": "/ranks/straight_up_dawg.png",
   "Straight Up Dawg": "/ranks/straight_up_dawg.png",
   "Respectable Wolf": "/ranks/respectable_wolf.png",
   "Beta Wolf": "/ranks/beta_wolf.png",
   "Alpha Wolf": "/ranks/alpha_wolf.png",
-  "Sigma Wolf": "/ranks/sigma_wolf.png", 
-  "Sigma Wolf Elite": "/ranks/super_mega_deluxe_ultra_sigma_nonchalant_wolf.png",
+  "Sigma Wolf": "/ranks/sigma_wolf.png",
   "Super Mega Deluxe Ultra Sigma Nonchalant Wolf": "/ranks/super_mega_deluxe_ultra_sigma_nonchalant_wolf.png"
 };
 
+// Function to normalize rank names for lookup
+const normalizeRankName = (rank: string): string => {
+  // Remove any numbers or special characters from the rank name
+  const normalized = rank.replace(/[0-9]/g, '').trim();
+  return normalized;
+};
+
 const RankIcon = ({ rank, size = "md", className = "" }: RankIconProps) => {
-  // Get the correct icon for the rank or use a fallback
-  const iconSrc = useMemo(() => rankIconMap[rank] || "/ranks/runt.png", [rank]);
+  // Normalize the rank name and get the correct icon
+  const normalizedRank = normalizeRankName(rank);
+  const iconSrc = useMemo(() => rankIconMap[normalizedRank] || "/ranks/runt.png", [normalizedRank]);
   
   // Determine icon size class
   const sizeClass = useMemo(() => ({
