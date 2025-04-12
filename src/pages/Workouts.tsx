@@ -7,8 +7,7 @@ import {
   Plus, 
   Search, 
   CalendarDays,
-  SlidersHorizontal, 
-  Check, 
+  SlidersHorizontal,
   X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -28,6 +27,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { toast } from "sonner";
 
 import WorkoutForm from "@/components/WorkoutForm";
+import { Exercise, Workout } from "@/types/workout";
 
 // Mock data for exercises
 const exercises = [
@@ -44,9 +44,10 @@ const exercises = [
 ];
 
 // Mock data for workouts
-const workoutHistory = [
+const workoutHistory: Workout[] = [
   { 
     id: "1", 
+    name: "Chest Day",
     date: "2023-04-10", 
     displayDate: "Today",
     exercises: [
@@ -59,6 +60,7 @@ const workoutHistory = [
   },
   { 
     id: "2", 
+    name: "Back Day",
     date: "2023-04-09", 
     displayDate: "Yesterday",
     exercises: [
@@ -71,6 +73,7 @@ const workoutHistory = [
   },
   { 
     id: "3", 
+    name: "Leg Day",
     date: "2023-04-07", 
     displayDate: "3 days ago",
     exercises: [
@@ -82,6 +85,7 @@ const workoutHistory = [
   },
   { 
     id: "4", 
+    name: "Upper Body",
     date: "2023-04-06", 
     displayDate: "4 days ago",
     exercises: [
@@ -94,6 +98,7 @@ const workoutHistory = [
   },
   { 
     id: "5", 
+    name: "Quick Back",
     date: "2023-04-05", 
     displayDate: "5 days ago",
     exercises: [
@@ -106,8 +111,8 @@ const workoutHistory = [
 ];
 
 // Helper function to group workouts by month
-const groupWorkoutsByMonth = (workouts: typeof workoutHistory) => {
-  return workouts.reduce((groups: Record<string, typeof workoutHistory>, workout) => {
+const groupWorkoutsByMonth = (workouts: Workout[]) => {
+  return workouts.reduce((groups: Record<string, Workout[]>, workout) => {
     const date = new Date(workout.date);
     const month = date.toLocaleString('default', { month: 'long', year: 'numeric' });
     
@@ -184,7 +189,7 @@ const Workouts = () => {
                   <div key={workout.id} className="glass-card p-5 border-none">
                     <div className="flex flex-col md:flex-row md:items-center justify-between mb-4">
                       <div>
-                        <h3 className="text-lg font-semibold text-white">{workout.displayDate}</h3>
+                        <h3 className="text-lg font-semibold text-white">{workout.name} • {workout.displayDate}</h3>
                         <p className="text-wolf-silver text-sm">{workout.exercises.length} exercises • +{workout.xpGained} XP</p>
                       </div>
                       <DropdownMenu>
@@ -239,13 +244,15 @@ const Workouts = () => {
         
         <TabsContent value="exercises">
           <div className="mb-6">
-            <Input
-              placeholder="Search exercises..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-wolf-charcoal border-wolf-purple/20 text-white"
-              startIcon={<Search className="h-4 w-4 text-wolf-silver" />}
-            />
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-wolf-silver" />
+              <Input
+                placeholder="Search exercises..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="bg-wolf-charcoal border-wolf-purple/20 text-white pl-10"
+              />
+            </div>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

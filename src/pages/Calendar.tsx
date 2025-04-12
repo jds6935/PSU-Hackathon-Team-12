@@ -1,37 +1,100 @@
 
 import { useState } from "react";
-import { format, addMonths, subMonths, isToday, parseISO, isSameDay } from "date-fns";
+import { format, isToday, parseISO, isSameDay } from "date-fns";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ChevronLeft, ChevronRight, Dumbbell } from "lucide-react";
+import { Dumbbell } from "lucide-react";
+import { Workout } from "@/types/workout";
 
 // Mock workout data
-const mockWorkouts = [
-  { id: "1", date: "2023-04-10", exercises: ["Bench Press", "Overhead Press", "Tricep Extensions"], xpGained: 100 },
-  { id: "2", date: "2023-04-09", exercises: ["Deadlift", "Pull-ups", "Barbell Row"], xpGained: 75 },
-  { id: "3", date: "2023-04-07", exercises: ["Squat", "Lunges"], xpGained: 75 },
-  { id: "4", date: "2023-04-06", exercises: ["Bench Press", "Push-ups", "Bicep Curls"], xpGained: 75 },
-  { id: "5", date: "2023-04-05", exercises: ["Deadlift", "Pull-ups"], xpGained: 25 },
-  { id: "6", date: "2023-04-02", exercises: ["Squat", "Lunges", "Leg Press"], xpGained: 75 },
-  { id: "7", date: "2023-04-01", exercises: ["Bench Press", "Incline Press", "Dips"], xpGained: 75 },
-  { id: "8", date: "2023-03-29", exercises: ["Deadlift", "Pull-ups", "Face Pulls"], xpGained: 75 },
-  { id: "9", date: "2023-03-27", exercises: ["Push-ups", "Dips", "Tricep Extensions"], xpGained: 50 }
+const mockWorkouts: Workout[] = [
+  { 
+    id: "1", 
+    name: "Chest Day",
+    date: "2023-04-10", 
+    displayDate: "Today",
+    exercises: [
+      { id: "e1", name: "Bench Press", sets: 3, reps: 10, weight: "80kg" },
+      { id: "e2", name: "Overhead Press", sets: 3, reps: 8, weight: "50kg" },
+      { id: "e3", name: "Tricep Extensions", sets: 3, reps: 12, weight: "35kg" },
+    ],
+    notes: "Chest day. Felt strong today!",
+    xpGained: 100
+  },
+  { 
+    id: "2", 
+    name: "Back Day",
+    date: "2023-04-09", 
+    displayDate: "Yesterday",
+    exercises: [
+      { id: "e4", name: "Deadlift", sets: 4, reps: 8, weight: "120kg" },
+      { id: "e5", name: "Pull-ups", sets: 4, reps: 8, weight: "BW" },
+      { id: "e6", name: "Barbell Row", sets: 3, reps: 10, weight: "70kg" },
+    ],
+    notes: "Back day. Need to work on grip strength.",
+    xpGained: 75
+  },
+  { 
+    id: "3", 
+    name: "Leg Day",
+    date: "2023-04-07", 
+    displayDate: "3 days ago",
+    exercises: [
+      { id: "e7", name: "Squat", sets: 4, reps: 12, weight: "100kg" },
+      { id: "e8", name: "Lunges", sets: 3, reps: 10, weight: "40kg" },
+    ],
+    notes: "Leg day. Really pushed it today.",
+    xpGained: 75
+  },
+  { 
+    id: "4", 
+    name: "Upper Body",
+    date: "2023-04-06", 
+    displayDate: "4 days ago",
+    exercises: [
+      { id: "e9", name: "Bench Press", sets: 3, reps: 10, weight: "75kg" },
+      { id: "e10", name: "Push-ups", sets: 3, reps: 15, weight: "BW" },
+      { id: "e11", name: "Bicep Curls", sets: 4, reps: 10, weight: "25kg" },
+    ],
+    notes: "",
+    xpGained: 75
+  },
+  { 
+    id: "5", 
+    name: "Quick Back",
+    date: "2023-04-05", 
+    displayDate: "5 days ago",
+    exercises: [
+      { id: "e12", name: "Deadlift", sets: 3, reps: 8, weight: "110kg" },
+      { id: "e13", name: "Pull-ups", sets: 3, reps: 8, weight: "BW" },
+    ],
+    notes: "Quick back workout",
+    xpGained: 25
+  },
 ];
+
+// Helper function to group workouts by month
+const groupWorkoutsByMonth = (workouts: Workout[]) => {
+  return workouts.reduce((groups: Record<string, Workout[]>, workout) => {
+    const date = new Date(workout.date);
+    const month = date.toLocaleString('default', { month: 'long', year: 'numeric' });
+    
+    if (!groups[month]) {
+      groups[month] = [];
+    }
+    
+    groups[month].push(workout);
+    return groups;
+  }, {});
+};
 
 const Calendar = () => {
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
-  const [selectedWorkout, setSelectedWorkout] = useState<any>(null);
+  const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-  const nextMonth = () => {
-    setCurrentMonth(addMonths(currentMonth, 1));
-  };
-
-  const prevMonth = () => {
-    setCurrentMonth(subMonths(currentMonth, 1));
-  };
+  const [groupedWorkouts, setGroupedWorkouts] = useState(() => groupWorkoutsByMonth(mockWorkouts));
 
   // Check if a date has a workout
   const hasWorkout = (date: Date) => {
@@ -89,30 +152,13 @@ const Calendar = () => {
           <h2 className="text-xl font-bold text-white">
             {format(currentMonth, 'MMMM yyyy')}
           </h2>
-          <div className="flex gap-2">
+          <div>
             <Button 
               variant="outline" 
-              size="icon"
-              onClick={prevMonth}
-              className="h-8 w-8 bg-wolf-charcoal border-wolf-purple/20 text-wolf-silver hover:text-wolf-purple"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <Button 
-              variant="outline" 
-              size="icon"
               onClick={() => setCurrentMonth(new Date())}
-              className="h-8 w-8 bg-wolf-charcoal border-wolf-purple/20 text-wolf-silver hover:text-wolf-purple"
+              className="bg-wolf-charcoal border-wolf-purple/20 text-wolf-silver hover:text-wolf-purple"
             >
               Today
-            </Button>
-            <Button 
-              variant="outline" 
-              size="icon"
-              onClick={nextMonth}
-              className="h-8 w-8 bg-wolf-charcoal border-wolf-purple/20 text-wolf-silver hover:text-wolf-purple"
-            >
-              <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
         </div>
@@ -120,6 +166,7 @@ const Calendar = () => {
         <CalendarComponent
           mode="single"
           month={currentMonth}
+          onMonthChange={setCurrentMonth}
           selected={new Date()}
           className="bg-transparent"
           classNames={{
@@ -174,7 +221,7 @@ const Calendar = () => {
         <DialogContent className="glass-card border-wolf-purple/20 text-white">
           <DialogHeader>
             <DialogTitle className="text-xl text-center mb-2 wolf-text-gradient">
-              Workout on {selectedWorkout && format(parseISO(selectedWorkout.date), 'MMMM d, yyyy')}
+              {selectedWorkout?.name} • {selectedWorkout && format(parseISO(selectedWorkout.date), 'MMMM d, yyyy')}
             </DialogTitle>
           </DialogHeader>
           
@@ -191,14 +238,23 @@ const Calendar = () => {
                 
                 <ScrollArea className="h-[200px]">
                   <div className="space-y-2">
-                    {selectedWorkout.exercises.map((exercise: string, index: number) => (
-                      <div key={index} className="p-3 bg-wolf-charcoal rounded-md">
-                        <div className="text-white font-medium">{exercise}</div>
+                    {selectedWorkout.exercises.map((exercise) => (
+                      <div key={exercise.id} className="p-3 bg-wolf-charcoal rounded-md">
+                        <div className="text-white font-medium">{exercise.name}</div>
+                        <div className="text-sm text-wolf-silver">
+                          {exercise.sets} sets × {exercise.reps} reps • {exercise.weight}
+                        </div>
                       </div>
                     ))}
                   </div>
                 </ScrollArea>
               </div>
+              
+              {selectedWorkout.notes && (
+                <div className="text-wolf-silver text-sm italic p-3 bg-wolf-charcoal/30 rounded-lg">
+                  "{selectedWorkout.notes}"
+                </div>
+              )}
               
               <div className="flex justify-end">
                 <Button variant="ghost" onClick={() => setIsDialogOpen(false)} className="text-wolf-silver hover:text-wolf-purple">

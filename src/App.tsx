@@ -12,6 +12,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Workouts from "./pages/Workouts";
 import Calendar from "./pages/Calendar";
+import Pack from "./pages/Pack";
 import Profile from "./pages/Profile";
 import MainLayout from "./components/MainLayout";
 
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/workouts" element={<Workouts />} />
             <Route path="/calendar" element={<Calendar />} />
+            <Route path="/pack" element={<Pack />} />
             <Route path="/profile" element={<Profile />} />
           </Route>
           

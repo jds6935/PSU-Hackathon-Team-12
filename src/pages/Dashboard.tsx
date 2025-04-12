@@ -13,13 +13,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Progress } from "@/components/ui/progress";
 import { useNavigate } from "react-router-dom";
 
 import RankBadge from "@/components/RankBadge";
 import StreakCounter from "@/components/StreakCounter";
 import StatCard from "@/components/StatCard";
 import WorkoutForm from "@/components/WorkoutForm";
+import { CustomProgress } from "@/components/ui/custom-progress";
+import { Workout } from "@/types/workout";
 
 // Mock data - in a real app would come from Supabase
 const mockData = {
@@ -43,11 +44,56 @@ const mockData = {
     }
   },
   recentWorkouts: [
-    { id: "1", name: "Bench Press", date: "Today", sets: 3, reps: 10, weight: "80kg" },
-    { id: "2", name: "Deadlift", date: "Yesterday", sets: 4, reps: 8, weight: "120kg" },
-    { id: "3", name: "Squats", date: "3 days ago", sets: 4, reps: 12, weight: "100kg" },
-    { id: "4", name: "Pull-ups", date: "4 days ago", sets: 3, reps: 10, weight: "BW" }
-  ],
+    { 
+      id: "1", 
+      name: "Chest Day",
+      date: "2023-04-10",
+      displayDate: "Today", 
+      exercises: [
+        { id: "e1", name: "Bench Press", sets: 3, reps: 10, weight: "80kg" },
+        { id: "e2", name: "Overhead Press", sets: 3, reps: 8, weight: "50kg" },
+        { id: "e3", name: "Tricep Extensions", sets: 3, reps: 12, weight: "35kg" },
+      ],
+      notes: "Felt strong today!",
+      xpGained: 100
+    },
+    { 
+      id: "2", 
+      name: "Back Day",
+      date: "2023-04-09", 
+      displayDate: "Yesterday",
+      exercises: [
+        { id: "e4", name: "Deadlift", sets: 4, reps: 8, weight: "120kg" },
+        { id: "e5", name: "Pull-ups", sets: 4, reps: 8, weight: "BW" },
+      ],
+      notes: "Need to work on grip strength.",
+      xpGained: 75
+    },
+    { 
+      id: "3", 
+      name: "Leg Day",
+      date: "2023-04-07", 
+      displayDate: "3 days ago",
+      exercises: [
+        { id: "e7", name: "Squat", sets: 4, reps: 12, weight: "100kg" },
+        { id: "e8", name: "Lunges", sets: 3, reps: 10, weight: "40kg" },
+      ],
+      notes: "Really pushed it today.",
+      xpGained: 75
+    },
+    { 
+      id: "4", 
+      name: "Upper Body",
+      date: "2023-04-06", 
+      displayDate: "4 days ago",
+      exercises: [
+        { id: "e9", name: "Push-ups", sets: 3, reps: 15, weight: "BW" },
+        { id: "e10", name: "Bicep Curls", sets: 4, reps: 10, weight: "25kg" },
+      ],
+      notes: "",
+      xpGained: 75
+    }
+  ] as Workout[],
   todayXP: 100,
   xpToEarn: 150
 };
@@ -94,7 +140,11 @@ const Dashboard = () => {
                   <span className="text-wolf-silver text-sm">Today's XP</span>
                   <span className="text-wolf-purple font-medium">{mockData.todayXP}/{mockData.xpToEarn}</span>
                 </div>
-                <Progress value={(mockData.todayXP / mockData.xpToEarn) * 100} className="h-2 bg-wolf-dark" indicatorClassName="bg-wolf-purple" />
+                <CustomProgress 
+                  value={(mockData.todayXP / mockData.xpToEarn) * 100} 
+                  className="h-2 bg-wolf-dark" 
+                  indicatorClassName="bg-wolf-purple" 
+                />
               </div>
               
               <StreakCounter streak={mockData.user.streak} />
@@ -182,11 +232,11 @@ const Dashboard = () => {
                     <div className="flex-1">
                       <h4 className="font-medium text-white">{workout.name}</h4>
                       <p className="text-sm text-wolf-silver">
-                        {workout.sets} sets × {workout.reps} reps • {workout.weight}
+                        {workout.exercises.length} exercises • {workout.xpGained} XP
                       </p>
                     </div>
                     <div className="text-right">
-                      <div className="text-sm font-medium text-white">{workout.date}</div>
+                      <div className="text-sm font-medium text-white">{workout.displayDate}</div>
                       <Button 
                         variant="ghost" 
                         size="sm" 
